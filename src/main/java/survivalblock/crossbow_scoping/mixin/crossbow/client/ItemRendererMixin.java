@@ -38,7 +38,7 @@ public abstract class ItemRendererMixin {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientWorld world = client.world;
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-135));
-        matrices.translate(-0.71, 0.1, 0.6);
+        matrices.translate(-0.707, 0.1, 0.6);
         this.renderItem(otherStack, ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, light, overlay, matrices, vertexConsumers, world, 0);
         matrices.pop();
     }

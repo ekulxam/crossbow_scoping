@@ -8,8 +8,9 @@
 		"Survivalblock"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://modrinth.com/mod/crossbow-scoping",
+		"sources": "https://github.com/ekulxam/crossbow_scoping",
+		"issues": "https://github.com/ekulxam/crossbow_scoping/issues"
 	},
 	"license": "ARR",
 	"icon": "assets/crossbow_scoping/icon.png",
