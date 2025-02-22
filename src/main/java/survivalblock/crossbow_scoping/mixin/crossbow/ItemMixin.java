@@ -14,10 +14,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+@SuppressWarnings("CancellableInjectionUsage")
 @Mixin(Item.class)
 public class ItemMixin {
 
-    @SuppressWarnings("CancellableInjectionUsage")
     @Inject(method = "onClicked", at = @At("HEAD"), cancellable = true)
     protected void insertOrExtractSpyglass(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference, CallbackInfoReturnable<Boolean> cir) {
 

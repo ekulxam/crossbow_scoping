@@ -23,8 +23,6 @@ public class CrossbowScoping implements ModInitializer {
 	public static final String MOD_ID = "crossbow_scoping";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	public static boolean isAttacking = false;
-
 	@Override
 	public void onInitialize() {
 		CrossbowScopingDataComponentTypes.init();

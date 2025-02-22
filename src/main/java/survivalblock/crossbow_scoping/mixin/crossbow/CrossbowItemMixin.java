@@ -59,8 +59,8 @@ public class CrossbowItemMixin extends ItemMixin {
 
     @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/CrossbowItem;shootAll(Lnet/minecraft/world/World;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/util/Hand;Lnet/minecraft/item/ItemStack;FFLnet/minecraft/entity/LivingEntity;)V", shift = At.Shift.BEFORE), cancellable = true)
     private void scopeInsteadOfShooting(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir, @Local ItemStack stack) {
-        if (CrossbowScoping.isAttacking) {
-            CrossbowScoping.isAttacking = false;
+        if (user.crossbow_scoping$isAttacking()) {
+            user.crossbow_scoping$setAttacking(false);
             return;
         }
         ItemStack stackInComponents = stack.getOrDefault(CROSSBOW_SCOPE, ItemStack.EMPTY);

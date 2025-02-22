@@ -10,7 +10,7 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Hand;
 import survivalblock.crossbow_scoping.common.CrossbowScoping;
 
-public class ScopedCrossbowC2SPayload implements CustomPayload {
+public final class ScopedCrossbowC2SPayload implements CustomPayload {
 
     public static final ScopedCrossbowC2SPayload INSTANCE = new ScopedCrossbowC2SPayload();
 
@@ -26,7 +26,7 @@ public class ScopedCrossbowC2SPayload implements CustomPayload {
         return ID;
     }
 
-    public static class Receiver implements ServerPlayNetworking.PlayPayloadHandler<ScopedCrossbowC2SPayload> {
+    public static final class Receiver implements ServerPlayNetworking.PlayPayloadHandler<ScopedCrossbowC2SPayload> {
 
         public static final Receiver INSTANCE = new Receiver();
 
@@ -42,9 +42,9 @@ public class ScopedCrossbowC2SPayload implements CustomPayload {
             if (stack.isEmpty() || !CrossbowScoping.isLoaded(stack)) {
                 return;
             }
-            CrossbowScoping.isAttacking = true;
+            player.crossbow_scoping$setAttacking(true);
             stack.use(player.getWorld(), player, pair.getSecond());
-            CrossbowScoping.isAttacking = false;
+            player.crossbow_scoping$setAttacking(false);
         }
     }
 }

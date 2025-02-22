@@ -3,12 +3,12 @@
 	"id": "crossbow_scoping",
 	"version": "${version}",
 	"name": "Crossbow Scoping",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Aim through spyglasses!",
 	"authors": [
 		"Survivalblock"
 	],
 	"contact": {
-		"homepage": "https://modrinth.com/mod/crossbow-scoping",
+		"homepage": "https://modrinth.com/mod/crossbow_scoping",
 		"sources": "https://github.com/ekulxam/crossbow_scoping",
 		"issues": "https://github.com/ekulxam/crossbow_scoping/issues"
 	},
@@ -32,7 +32,9 @@
 		"java": ">=21",
 		"fabric-api": "*"
 	},
-	"suggests": {
-		"another-mod": "*"
+	"custom": {
+		"loom:injected_interfaces": {
+			"net/minecraft/class_1657": ["survivalblock/crossbow_scoping/common/injected_interface/CrossbowAttackingPlayer"]
+		}
 	}
 }
