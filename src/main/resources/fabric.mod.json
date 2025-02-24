@@ -1,30 +1,36 @@
 {
 	"schemaVersion": 1,
-	"id": "crossbow_scoping",
+	"id": "axe_throw",
 	"version": "${version}",
-	"name": "Crossbow Scoping",
-	"description": "Aim through spyglasses!",
+	"name": "Axe Throw",
+	"description": "I think you've been hit by a projectile axe",
 	"authors": [
 		"Survivalblock"
 	],
 	"contact": {
-		"homepage": "https://modrinth.com/mod/crossbow_scoping",
-		"sources": "https://github.com/ekulxam/crossbow_scoping",
-		"issues": "https://github.com/ekulxam/crossbow_scoping/issues"
+		"homepage": "https://modrinth.com/mod/axe_throw",
+		"sources": "https://github.com/ekulxam/axe_throw",
+		"issues": "https://github.com/ekulxam/axe_throw/issues"
 	},
-	"license": "ARR",
-	"icon": "assets/crossbow_scoping/icon.png",
+	"license": "MIT-0",
+	"icon": "assets/axe_throw/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"survivalblock.crossbow_scoping.common.CrossbowScoping"
+          "survivalblock.axe_throw.common.AxeThrow"
+		],
+		"client": [
+			"survivalblock.axe_throw.client.AxeThrowClient"
 		],
 		"fabric-datagen": [
-			"survivalblock.crossbow_scoping.common.datagen.CrossbowScopingDataGenerator"
+			"survivalblock.axe_throw.common.datagen.AxeThrowDataGenerator"
+		],
+		"modmenu": [
+			"survivalblock.axe_throw.common.compat.config.AxeThrowModMenuCompat"
 		]
 	},
 	"mixins": [
-		"crossbow_scoping.mixins.json"
+		"axe_throw.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.16.10",
@@ -32,9 +38,7 @@
 		"java": ">=21",
 		"fabric-api": "*"
 	},
-	"custom": {
-		"loom:injected_interfaces": {
-			"net/minecraft/class_1657": ["survivalblock/crossbow_scoping/common/injected_interface/CrossbowAttackingPlayer"]
-		}
+	"suggests": {
+		"another-mod": "*"
 	}
 }

@@ -1,0 +1,12 @@
+{
+  "values": [
+    "minecraft:diamond_axe",
+    "minecraft:netherite_axe",
+    {
+      "id": "minecraft:golden_axe",
+      "required": false
+    },
+    "#axe_throw:knives",
+    "#axe_throw:always_throwable"
+  ]
+}
