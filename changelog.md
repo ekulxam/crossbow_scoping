@@ -1,2 +1,2 @@
-Axe Throw 1.0.2
-- Fix `axe_throw:always_throwable` items not being throwable
+Crossbow Scoping 1.0.1+1.21.1
+- Fixed scoped crossbow use action

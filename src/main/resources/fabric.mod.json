@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "crossbow_scoping",
+	"version": "${version}",
+	"name": "Crossbow Scoping",
+	"description": "Aim through spyglasses!",
+	"authors": [
+		"Survivalblock"
+	],
+	"contact": {
+		"homepage": "https://modrinth.com/mod/crossbow_scoping",
+		"sources": "https://github.com/ekulxam/crossbow_scoping",
+		"issues": "https://github.com/ekulxam/crossbow_scoping/issues"
+	},
+	"license": "ARR",
+	"icon": "assets/crossbow_scoping/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"survivalblock.crossbow_scoping.common.CrossbowScoping"
+		],
+		"fabric-datagen": [
+			"survivalblock.crossbow_scoping.common.datagen.CrossbowScopingDataGenerator"
+		]
+	},
+	"mixins": [
+		"crossbow_scoping.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.10",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"custom": {
+		"loom:injected_interfaces": {
+			"net/minecraft/class_1657": ["survivalblock/crossbow_scoping/common/injected_interface/CrossbowAttackingPlayer"]
+		}
+	}
+}
