@@ -5,6 +5,7 @@ import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,7 +24,9 @@ public class CrossbowScoping implements ModInitializer {
 	public static final String MOD_ID = "crossbow_scoping";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	@Override
+    public static final boolean OMNICROSSBOW_LOADED = FabricLoader.getInstance().isModLoaded("omnicrossbow");
+
+    @Override
 	public void onInitialize() {
 		CrossbowScopingDataComponentTypes.init();
 		CrossbowScopingGameRules.init();
