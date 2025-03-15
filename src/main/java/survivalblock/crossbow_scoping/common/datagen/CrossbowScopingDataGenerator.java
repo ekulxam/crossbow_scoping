@@ -9,6 +9,7 @@ public class CrossbowScopingDataGenerator implements DataGeneratorEntrypoint {
 	public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
 		FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
 		pack.addProvider(CrossbowScopingEnUsLangGenerator::new);
-		pack.addProvider(CrossbowScopingTagGenerator::new);
+		pack.addProvider(CrossbowScopingTagGenerator.CrossbowScopingEnchantmentTagGenerator::new);
+		pack.addProvider(CrossbowScopingTagGenerator.CrossbowScopingEntityTypeTagGenerator::new);
 	}
 }

@@ -18,7 +18,7 @@ public class LivingEntityMixin {
         if (!(original.getItem() instanceof CrossbowItem)) {
             return original;
         }
-        if (!CrossbowScoping.isLoaded(original)) {
+        if (!CrossbowScoping.isLoaded(original, true)) {
             return original;
         }
         ItemStack stackInComponents = original.getOrDefault(CrossbowScopingDataComponentTypes.CROSSBOW_SCOPE, ItemStack.EMPTY);

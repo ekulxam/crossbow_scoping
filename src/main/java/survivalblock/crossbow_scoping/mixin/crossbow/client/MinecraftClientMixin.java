@@ -12,7 +12,6 @@ import net.minecraft.client.option.GameOptions;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -45,7 +44,7 @@ public class MinecraftClientMixin {
         }
         Pair<ItemStack, Hand> pair = CrossbowScoping.getCrossbowWithScope(this.player);
         ItemStack stack = pair.getFirst();
-        if (stack.isEmpty() || !CrossbowScoping.isLoaded(stack)) {
+        if (stack.isEmpty() || !CrossbowScoping.isLoaded(stack) || this.player.getItemCooldownManager().isCoolingDown(stack.getItem())) {
             original.call(instance, breaking);
             return;
         }
@@ -60,7 +59,7 @@ public class MinecraftClientMixin {
         }
         Pair<ItemStack, Hand> pair = CrossbowScoping.getCrossbowWithScope(this.player);
         ItemStack stack = pair.getFirst();
-        if (stack.isEmpty() || !CrossbowScoping.isLoaded(stack)) {
+        if (stack.isEmpty() || !CrossbowScoping.isLoaded(stack) || this.player.getItemCooldownManager().isCoolingDown(stack.getItem())) {
             return;
         }
         cir.setReturnValue(false);

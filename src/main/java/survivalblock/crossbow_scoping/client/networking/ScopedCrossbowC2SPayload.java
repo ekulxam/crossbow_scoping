@@ -39,7 +39,7 @@ public final class ScopedCrossbowC2SPayload implements CustomPayload {
             PlayerEntity player = context.player();
             Pair<ItemStack, Hand> pair = CrossbowScoping.getCrossbowWithScope(player);
             ItemStack stack = pair.getFirst();
-            if (stack.isEmpty() || !CrossbowScoping.isLoaded(stack)) {
+            if (stack.isEmpty() || !CrossbowScoping.isLoaded(stack) || player.getItemCooldownManager().isCoolingDown(stack.getItem())) {
                 return;
             }
             player.crossbow_scoping$setAttacking(true);
