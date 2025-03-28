@@ -5,7 +5,9 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.util.Identifier;
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingTags;
 
 import java.util.concurrent.CompletableFuture;
@@ -36,7 +38,20 @@ public class CrossbowScopingTagGenerator {
         @Override
         protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
             FabricTagProvider<Enchantment>.FabricTagBuilder usesExtendedCooldownBuilder = getOrCreateTagBuilder(CrossbowScopingTags.USES_EXTENDED_COOLDOWN);
-            usesExtendedCooldownBuilder.addOptional(OmniCrossbow.id("multichambered"));
+            usesExtendedCooldownBuilder.addOptional(OmniCrossbow.MULTICHAMBERED);
+        }
+    }
+
+    public static class CrossbowScopingItemTagGenerator extends FabricTagProvider.ItemTagProvider {
+
+        public CrossbowScopingItemTagGenerator(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> completableFuture) {
+            super(output, completableFuture);
+        }
+
+        @Override
+        protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
+            FabricTagProvider<Item>.FabricTagBuilder incompatibleItems = getOrCreateTagBuilder(CrossbowScopingTags.INCOMPATIBLE_ITEMS);
+            incompatibleItems.addOptional(Identifier.of("pierced", "long_crossbow"));
         }
     }
 }

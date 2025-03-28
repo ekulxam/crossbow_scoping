@@ -11,5 +11,6 @@ public class CrossbowScopingDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider(CrossbowScopingEnUsLangGenerator::new);
 		pack.addProvider(CrossbowScopingTagGenerator.CrossbowScopingEnchantmentTagGenerator::new);
 		pack.addProvider(CrossbowScopingTagGenerator.CrossbowScopingEntityTypeTagGenerator::new);
+		pack.addProvider(CrossbowScopingTagGenerator.CrossbowScopingItemTagGenerator::new);
 	}
 }

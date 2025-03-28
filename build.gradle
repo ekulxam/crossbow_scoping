@@ -17,8 +17,37 @@ repositories {
 	maven {
 		url "https://api.modrinth.com/maven"
 	}
+
+	mavenLocal()
 	maven {
 		url "https://maven.bawnorton.com/releases"
+	}
+	maven {
+		name = "QuiltMC"
+		url = "https://maven.quiltmc.org/repository/release"
+	}
+	maven {
+		name = 'Ladysnake Mods'
+		url = 'https://maven.ladysnake.org/releases'
+	}
+	maven {
+		name = 'Ladysnake Mods (snapshots)'
+		url = 'https://maven.ladysnake.org/snapshots'
+	}
+	maven {
+		url = 'https://maven.cafeteria.dev'
+		content {
+			includeGroup 'net.adriantodt.fabricmc'
+		}
+	}
+	maven {
+		url "https://maven.shedaniel.me/"
+	}
+	maven {
+		url "https://maven.terraformersmc.com/"
+	}
+	maven {
+		url "https://maven.ryanliptak.com/"
 	}
 }
 
@@ -43,7 +72,10 @@ dependencies {
 	modCompileOnly "maven.modrinth:omnicrossbow:${project.omnicrossbow_version}"
 	modRuntimeOnly "maven.modrinth:omnicrossbow:${project.omnicrossbow_version}"
 
-	//include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${project.mixin_squared_version}")))
+	include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${project.mixin_squared_version}")))
+
+	modCompileOnly "com.github.apace100:apoli:${project.apoli_version}"
+	modRuntimeOnly "com.github.apace100:apoli:${project.apoli_version}"
 }
 
 processResources {

@@ -1,8 +1,11 @@
 {
   "required": true,
   "package": "survivalblock.crossbow_scoping.mixin",
+  "plugin": "survivalblock.crossbow_scoping.common.compat.CrossbowScopingMixinConfigPlugin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "compat.apoli.InventoryUtilMixin",
+    "compat.apoli.ItemStackMixinMixin",
     "crossbow.CrossbowItemMixin",
     "crossbow.ItemMixin",
     "crossbow.ItemUsageMixin",

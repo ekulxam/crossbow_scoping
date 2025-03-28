@@ -21,8 +21,8 @@ import net.minecraft.util.Unit;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -43,7 +43,7 @@ public class CrossbowItemMixin extends ItemMixin {
         if (!ClickType.RIGHT.equals(clickType)) {
             return;
         }
-        if (!otherStack.isEmpty() && !(otherStack.getItem() instanceof SpyglassItem)) {
+        if (!CrossbowScoping.canInsertSpyglass(stack, otherStack)) {
             return;
         }
         ItemStack stackInComponents = stack.getOrDefault(CROSSBOW_SCOPE, ItemStack.EMPTY);
