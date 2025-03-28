@@ -38,7 +38,7 @@ public class CrossbowScopingTagGenerator {
         @Override
         protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
             FabricTagProvider<Enchantment>.FabricTagBuilder usesExtendedCooldownBuilder = getOrCreateTagBuilder(CrossbowScopingTags.USES_EXTENDED_COOLDOWN);
-            usesExtendedCooldownBuilder.addOptional(OmniCrossbow.MULTICHAMBERED);
+            usesExtendedCooldownBuilder.addOptional(OmniCrossbow.id("multichambered"));
         }
     }
 
