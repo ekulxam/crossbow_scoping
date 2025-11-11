@@ -42,13 +42,13 @@ public class MinecraftClientMixin {
             original.call(instance, breaking);
             return;
         }
-        Pair<ItemStack, Hand> pair = CrossbowScoping.getCrossbowWithScope(this.player);
+        Pair<ItemStack, Hand> pair = CrossbowScoping.getCrossbowWithScope(this.player, true, true);
         ItemStack stack = pair.getFirst();
-        if (stack.isEmpty() || !CrossbowScoping.isLoaded(stack) || this.player.getItemCooldownManager().isCoolingDown(stack.getItem())) {
+        if (stack.isEmpty()) {
             original.call(instance, breaking);
             return;
         }
-        ClientPlayNetworking.send(ScopedCrossbowC2SPayload.INSTANCE);
+        ClientPlayNetworking.send(ScopedCrossbowC2SPayload.fromHand(pair.getSecond()));
         original.call(instance, false);
     }
 
@@ -57,9 +57,8 @@ public class MinecraftClientMixin {
         if (this.player == null) {
             return;
         }
-        Pair<ItemStack, Hand> pair = CrossbowScoping.getCrossbowWithScope(this.player);
-        ItemStack stack = pair.getFirst();
-        if (stack.isEmpty() || !CrossbowScoping.isLoaded(stack) || this.player.getItemCooldownManager().isCoolingDown(stack.getItem())) {
+        Pair<ItemStack, Hand> pair = CrossbowScoping.getCrossbowWithScope(this.player, true, true);
+        if (pair.getFirst().isEmpty()) {
             return;
         }
         cir.setReturnValue(false);

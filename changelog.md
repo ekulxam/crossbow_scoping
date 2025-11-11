@@ -1,3 +1,3 @@
-Crossbow Scoping 1.0.3+1.21.1
-- Added the crossbow_scoping:incompatible_items tag to prevent unwanted crossbow items becoming scoped crossbows
-- Added apoli compat
+Crossbow Scoping 1.0.4+1.21.1
+- Removed direct apoli compat
+- Scoped Crossbow firing payload now tracks what hand the crossbow is in

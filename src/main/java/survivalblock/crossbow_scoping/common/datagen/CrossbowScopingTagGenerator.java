@@ -44,6 +44,8 @@ public class CrossbowScopingTagGenerator {
 
     public static class CrossbowScopingItemTagGenerator extends FabricTagProvider.ItemTagProvider {
 
+        private static final String PIERCED = "pierced";
+
         public CrossbowScopingItemTagGenerator(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> completableFuture) {
             super(output, completableFuture);
         }
@@ -51,7 +53,7 @@ public class CrossbowScopingTagGenerator {
         @Override
         protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
             FabricTagProvider<Item>.FabricTagBuilder incompatibleItems = getOrCreateTagBuilder(CrossbowScopingTags.INCOMPATIBLE_ITEMS);
-            incompatibleItems.addOptional(Identifier.of("pierced", "long_crossbow"));
+            incompatibleItems.addOptional(Identifier.of(PIERCED, "long_crossbow"));
         }
     }
 }

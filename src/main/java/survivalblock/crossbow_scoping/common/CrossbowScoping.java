@@ -21,6 +21,8 @@ import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTy
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingGameRules;
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingTags;
 
+import java.util.function.Predicate;
+
 public class CrossbowScoping implements ModInitializer {
 
 	public static final String MOD_ID = "crossbow_scoping";
@@ -40,13 +42,22 @@ public class CrossbowScoping implements ModInitializer {
 	}
 
 	public static Pair<ItemStack, Hand> getCrossbowWithScope(PlayerEntity player) {
+		return getCrossbowWithScope(player, false, false);
+	}
+
+	public static Pair<ItemStack, Hand> getCrossbowWithScope(PlayerEntity player, boolean checkLoaded, boolean checkCooldown) {
+        Predicate<ItemStack> predicate = (stack) ->
+                isValidCrossbow(stack)
+                        && !stack.getOrDefault(CrossbowScopingDataComponentTypes.CROSSBOW_SCOPE, ItemStack.EMPTY).isEmpty()
+                        && (!checkLoaded || isLoaded(stack))
+                        && (!checkCooldown || !player.getItemCooldownManager().isCoolingDown(stack.getItem()));
 		ItemStack stack = player.getActiveItem();
-		if (isValidCrossbow(stack) && !stack.getOrDefault(CrossbowScopingDataComponentTypes.CROSSBOW_SCOPE, ItemStack.EMPTY).isEmpty()) {
+		if (predicate.test(stack)) {
 			return Pair.of(stack, player.getActiveHand());
 		}
 		for (Hand hand : Hand.values()) {
 			stack = player.getStackInHand(hand);
-			if (isValidCrossbow(stack) && !stack.getOrDefault(CrossbowScopingDataComponentTypes.CROSSBOW_SCOPE, ItemStack.EMPTY).isEmpty()) {
+			if (predicate.test(stack)) {
 				return Pair.of(stack, hand);
 			}
 		}
@@ -63,11 +74,11 @@ public class CrossbowScoping implements ModInitializer {
 		return isLoaded(stack, false);
 	}
 
-    public static boolean isLoaded(ItemStack stack, boolean checkLoaded) {
+    public static boolean isLoaded(ItemStack stack, boolean checkLoading) {
 		if (!isValidCrossbow(stack)) {
 			return false;
 		}
-		if (checkLoaded && stack.contains(CrossbowScopingDataComponentTypes.LOADING_PHASE)) {
+		if (checkLoading && stack.contains(CrossbowScopingDataComponentTypes.LOADING_PHASE)) {
 			return false;
 		}
 		ChargedProjectilesComponent chargedProjectilesComponent = stack.get(DataComponentTypes.CHARGED_PROJECTILES);
