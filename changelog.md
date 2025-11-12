@@ -5,3 +5,4 @@ Crossbow Scoping 1.1.0+1.21.1
 - Fixed offhand hotbar rendering when using crossbow
 - Internals rework
   - Minecraft now thinks the slot's ItemStack is a spyglass and not a crossbow
+- Fixed not being able to see through scope unless on cooldown
