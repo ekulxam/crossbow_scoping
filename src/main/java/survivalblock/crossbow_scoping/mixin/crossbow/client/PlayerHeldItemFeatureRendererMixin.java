@@ -47,7 +47,7 @@ public abstract class PlayerHeldItemFeatureRendererMixin<T extends PlayerEntity,
         player.crossbow_scoping$setAttacking(true);
         ItemStack crossbow = player.getStackInHand(player.getActiveHand());
         player.crossbow_scoping$setAttacking(false);
-        if (ItemStack.areItemsAndComponentsEqual(scope, crossbow.getOrDefault(CrossbowScopingDataComponentTypes.CROSSBOW_SCOPE, ItemStack.EMPTY))) {
+        if (ItemStack.areEqual(scope, crossbow.getOrDefault(CrossbowScopingDataComponentTypes.CROSSBOW_SCOPE, ItemStack.EMPTY))) {
             localBooleanRef.set(true);
             return crossbow;
         }

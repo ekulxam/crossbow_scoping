@@ -51,7 +51,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Cro
             return false;
         }
         if (!this.crossbow_scoping$initialScope.isEmpty()) {
-            boolean initial = ItemStack.areItemsAndComponentsEqual(this.crossbow_scoping$initialScope, scope);
+            boolean initial = ItemStack.areEqual(this.crossbow_scoping$initialScope, scope);
             if (initial) {
                 return true;
             }
@@ -60,7 +60,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Cro
         if (active == null || active.isEmpty()) {
             return false;
         }
-        return ItemStack.areItemsAndComponentsEqual(active, scope);
+        return ItemStack.areEqual(active, scope);
     }
 
     /*
