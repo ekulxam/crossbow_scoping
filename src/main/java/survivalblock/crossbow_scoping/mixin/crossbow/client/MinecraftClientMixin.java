@@ -42,7 +42,9 @@ public class MinecraftClientMixin {
             original.call(instance, breaking);
             return;
         }
+        this.player.crossbow_scoping$setAttacking(true);
         Pair<ItemStack, Hand> pair = CrossbowScoping.getCrossbowWithScope(this.player, true, true);
+        this.player.crossbow_scoping$setAttacking(false);
         ItemStack stack = pair.getFirst();
         if (stack.isEmpty()) {
             original.call(instance, breaking);

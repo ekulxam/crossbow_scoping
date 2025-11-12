@@ -1,15 +1,23 @@
 package survivalblock.crossbow_scoping.mixin.crossbow;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.SpyglassItem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import survivalblock.crossbow_scoping.common.CrossbowScoping;
+import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes;
 import survivalblock.crossbow_scoping.common.injected_interface.CrossbowAttackingPlayer;
 
-@Mixin(PlayerEntity.class)
-public class PlayerEntityMixin implements CrossbowAttackingPlayer {
+@Mixin(value = PlayerEntity.class, priority = 10000)
+public abstract class PlayerEntityMixin extends LivingEntityMixin implements CrossbowAttackingPlayer {
 
     @Unique
     private boolean crossbow_scoping$attacking = false;
+    @Unique
+    private ItemStack crossbow_scoping$initialScope = ItemStack.EMPTY;
 
     @Override
     public void crossbow_scoping$setAttacking(boolean attacking) {
@@ -20,4 +28,52 @@ public class PlayerEntityMixin implements CrossbowAttackingPlayer {
     public boolean crossbow_scoping$isAttacking() {
         return this.crossbow_scoping$attacking;
     }
+
+    @Override
+    public void crossbow_scoping$setStartingToScope(ItemStack scope) {
+        this.crossbow_scoping$initialScope = scope;
+    }
+
+    @Override
+    public boolean crossbow_scoping$usingScope(ItemStack crossbow) {
+        if (this.crossbow_scoping$attacking || crossbow.isEmpty()) {
+            return false;
+        }
+        ItemStack scope;
+        if (CrossbowScoping.isValidCrossbow(crossbow)) {
+            scope = crossbow.getOrDefault(CrossbowScopingDataComponentTypes.CROSSBOW_SCOPE, ItemStack.EMPTY);
+        } else if (crossbow.getItem() instanceof SpyglassItem) {
+            scope = crossbow; // in the case that I accidentally pass in the spyglass
+        } else {
+            scope = ItemStack.EMPTY;
+        }
+        if (scope.isEmpty()) {
+            return false;
+        }
+        if (!this.crossbow_scoping$initialScope.isEmpty()) {
+            boolean initial = ItemStack.areItemsAndComponentsEqual(this.crossbow_scoping$initialScope, scope);
+            if (initial) {
+                return true;
+            }
+        }
+        ItemStack active = this.getActiveItem();
+        if (active == null || active.isEmpty()) {
+            return false;
+        }
+        return ItemStack.areItemsAndComponentsEqual(active, scope);
+    }
+
+    /*
+            begin credit
+            Adapted from https://github.com/ekulxam/amarong/blob/f8264bdf61751705497ecca122e5d655c067eba4/src/main/java/survivalblock/amarong/mixin/staff/PlayerEntityMixin.java#L13
+            The MIT license can be found in PlayerInventoryMixin
+             */
+    @ModifyReturnValue(method = "getEquippedStack", at = @At("RETURN"))
+    private ItemStack returnSpyglassStack(ItemStack original) {
+        if (this.crossbow_scoping$usingScope(original)) {
+            return this.replaceWithScope(original);
+        }
+        return original;
+    }
+    // end credit
 }

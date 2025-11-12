@@ -1,10 +1,8 @@
 package survivalblock.crossbow_scoping.mixin.crossbow;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.CrossbowItem;
@@ -18,16 +16,15 @@ import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.Unit;
-import net.minecraft.util.UseAction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import survivalblock.crossbow_scoping.common.CrossbowScoping;
+import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes;
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingTags;
 
 import java.util.List;
@@ -57,7 +54,9 @@ public class CrossbowItemMixin extends ItemMixin {
 
     @Override
     protected void preventMining(BlockState state, World world, BlockPos pos, PlayerEntity miner, CallbackInfoReturnable<Boolean> cir) {
+        miner.crossbow_scoping$setAttacking(true);
         ItemStack stack = CrossbowScoping.getCrossbowWithScope(miner).getFirst();
+        miner.crossbow_scoping$setAttacking(false);
         if (stack.isEmpty()) {
             return;
         }
@@ -66,8 +65,14 @@ public class CrossbowItemMixin extends ItemMixin {
 
     @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/CrossbowItem;shootAll(Lnet/minecraft/world/World;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/util/Hand;Lnet/minecraft/item/ItemStack;FFLnet/minecraft/entity/LivingEntity;)V", shift = At.Shift.BEFORE), cancellable = true)
     private void scopeInsteadOfShooting(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir, @Local ItemStack stack) {
+        if (stack.contains(LOADING_PHASE)) {
+            stack.remove(LOADING_PHASE);
+        }
         if (user.crossbow_scoping$isAttacking()) {
             user.crossbow_scoping$setAttacking(false);
+            if (user.isUsingItem()) {
+                user.stopUsingItem();
+            }
             if (EnchantmentHelper.hasAnyEnchantmentsIn(stack, CrossbowScopingTags.USES_EXTENDED_COOLDOWN)) {
                 user.getItemCooldownManager().set(stack.getItem(), 11);
             } else {
@@ -75,12 +80,22 @@ public class CrossbowItemMixin extends ItemMixin {
             }
             return;
         }
-        if (stack.contains(LOADING_PHASE)) {
-            stack.remove(LOADING_PHASE);
-        }
         ItemStack stackInComponents = stack.getOrDefault(CROSSBOW_SCOPE, ItemStack.EMPTY);
         if (!stackInComponents.isEmpty() && stackInComponents.getItem() instanceof SpyglassItem) {
-            cir.setReturnValue(stackInComponents.use(world, user, hand));
+            user.crossbow_scoping$setStartingToScope(stackInComponents);
+            TypedActionResult<ItemStack> result = stackInComponents.use(world, user, hand);
+            user.crossbow_scoping$setStartingToScope(ItemStack.EMPTY);
+            ItemStack value = result.getValue();
+            if (!ItemStack.areEqual(stackInComponents, value)) {
+                if (value.isEmpty()) {
+                    stack.remove(CROSSBOW_SCOPE);
+                } else {
+                    stack.set(CROSSBOW_SCOPE, value);
+                }
+            }
+            //noinspection unchecked
+            ((TypedActionResultAccessor<ItemStack>) result).crossbow_scoping$setValue(stack);
+            cir.setReturnValue(result);
         }
     }
 
@@ -98,7 +113,7 @@ public class CrossbowItemMixin extends ItemMixin {
         }
     }
 
-
+/*
     @ModifyReturnValue(method = "getMaxUseTime", at = @At("RETURN"))
     private int spyglassUseItem(int original, ItemStack stack, LivingEntity user) {
         if (!CrossbowScoping.isLoaded(stack, true)) {
@@ -122,4 +137,6 @@ public class CrossbowItemMixin extends ItemMixin {
         }
         return stackInComponents.getUseAction();
     }
+
+ */
 }

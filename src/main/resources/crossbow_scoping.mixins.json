@@ -1,24 +1,24 @@
 {
   "required": true,
   "package": "survivalblock.crossbow_scoping.mixin",
-  "plugin": "survivalblock.crossbow_scoping.common.compat.CrossbowScopingMixinConfigPlugin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "compat.apoli.InventoryUtilMixin",
-    "compat.apoli.ItemStackMixinMixin",
     "crossbow.CrossbowItemMixin",
     "crossbow.ItemMixin",
-    "crossbow.ItemUsageMixin",
-    "crossbow.LivingEntityAccessor",
     "crossbow.LivingEntityMixin",
     "crossbow.PlayerEntityMixin",
-    "crossbow.RangedWeaponItemMixin"
+    "crossbow.PlayerInventoryMixin",
+    "crossbow.RangedWeaponItemMixin",
+    "crossbow.ServerPlayNetworkHandlerMixin",
+    "crossbow.TypedActionResultAccessor"
+  ],
+  "client": [
+    "crossbow.client.InGameHudMixin",
+    "crossbow.client.ItemRendererMixin",
+    "crossbow.client.MinecraftClientMixin",
+    "crossbow.client.PlayerHeldItemFeatureRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "client": [
-    "crossbow.client.ItemRendererMixin",
-    "crossbow.client.MinecraftClientMixin"
-	]
+  }
 }

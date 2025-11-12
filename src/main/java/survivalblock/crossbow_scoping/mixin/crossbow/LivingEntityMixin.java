@@ -6,15 +6,22 @@ import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpyglassItem;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import survivalblock.crossbow_scoping.common.CrossbowScoping;
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes;
 
-@Mixin(LivingEntity.class)
-public class LivingEntityMixin {
+@Mixin(value = LivingEntity.class, priority = 10000)
+public abstract class LivingEntityMixin {
+
+    @Shadow
+    public abstract ItemStack getActiveItem();
+
+    @Shadow
+    public abstract boolean isUsingItem();
 
     @ModifyExpressionValue(method = {"tickActiveItemStack", "consumeItem"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;getStackInHand(Lnet/minecraft/util/Hand;)Lnet/minecraft/item/ItemStack;"))
-    private ItemStack replaceWithScope(ItemStack original) {
+    protected ItemStack replaceWithScope(ItemStack original) {
         if (!(original.getItem() instanceof CrossbowItem)) {
             return original;
         }
@@ -27,5 +34,4 @@ public class LivingEntityMixin {
         }
         return original;
     }
-
 }
