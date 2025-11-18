@@ -24,7 +24,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import survivalblock.crossbow_scoping.common.CrossbowScoping;
-import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes;
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingTags;
 
 import java.util.List;
