@@ -15,7 +15,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import survivalblock.crossbow_scoping.common.CrossbowScoping;
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes;
 
-@Mixin(value = Inventory.class, priority = 10000)
 /*
 begin credit
 Adapted from https://github.com/ekulxam/amarong/blob/f8264bdf61751705497ecca122e5d655c067eba4/src/main/java/survivalblock/amarong/mixin/staff/PlayerInventoryMixin.java#L17
@@ -44,6 +43,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
  */
+@Mixin(value = Inventory.class, priority = 10000)
 public class PlayerInventoryMixin {
 
     @Shadow

@@ -1,9 +1,9 @@
 package survivalblock.crossbow_scoping.common.datagen;
 
-import archives.tater.omnicrossbow.OmniCrossbow;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -22,38 +22,38 @@ public class CrossbowScopingTagGenerator {
 
         @Override
         protected void addTags(HolderLookup.Provider wrapperLookup) {
-            FabricTagProvider<EntityType<?>>.FabricTagBuilder allowNoGravityBuilder = getOrCreateTagBuilder(CrossbowScopingTags.ALLOW_NO_GRAVITY);
-            allowNoGravityBuilder.add(EntityType.ARROW);
-            allowNoGravityBuilder.add(EntityType.SPECTRAL_ARROW);
-            allowNoGravityBuilder.add(EntityType.FIREWORK_ROCKET);
+            /*? <=1.21.1 {*/ /*getOrCreateTagBuilder *//*?} else {*/ valueLookupBuilder /*?}*/(CrossbowScopingTags.ALLOW_NO_GRAVITY)
+                    .add(EntityType.ARROW, EntityType.SPECTRAL_ARROW, EntityType.FIREWORK_ROCKET);
         }
     }
 
-    public static class CrossbowScopingEnchantmentTagGenerator extends FabricTagProvider.EnchantmentTagProvider {
+    public static class CrossbowScopingEnchantmentTagGenerator extends FabricTagProvider/*? <=1.21.1 {*/ /*.EnchantmentTagProvider *//*?} else {*/ <Enchantment> /*?}*/ {
+
+        private static final String OMNICROSSBOW = "omnicrossbow";
 
         public CrossbowScopingEnchantmentTagGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
-            super(output, completableFuture);
+            super(output, /*? >1.21.1 {*/ Registries.ENCHANTMENT, /*?}*/ completableFuture);
         }
 
         @Override
         protected void addTags(HolderLookup.Provider wrapperLookup) {
-            FabricTagProvider<Enchantment>.FabricTagBuilder usesExtendedCooldownBuilder = getOrCreateTagBuilder(CrossbowScopingTags.USES_EXTENDED_COOLDOWN);
-            usesExtendedCooldownBuilder.addOptional(OmniCrossbow.id("multichambered"));
+            /*? <=1.21.1 {*/ /*getOrCreateTagBuilder *//*?} else {*/ getOrCreateRawBuilder /*?}*/(CrossbowScopingTags.USES_EXTENDED_COOLDOWN)
+                    ./*? <=1.21.1 {*/ /*addOptional *//*?} else {*/ addOptionalElement /*?}*/(ResourceLocation.fromNamespaceAndPath(OMNICROSSBOW, "multichambered"));
         }
     }
 
-    public static class CrossbowScopingItemTagGenerator extends FabricTagProvider.ItemTagProvider {
+    public static class CrossbowScopingItemTagGenerator extends FabricTagProvider/*? <=1.21.1 {*/ /*.ItemTagProvider *//*?} else {*/ <Item> /*?}*/ {
 
         private static final String PIERCED = "pierced";
 
         public CrossbowScopingItemTagGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
-            super(output, completableFuture);
+            super(output, /*? >1.21.1 {*/ Registries.ITEM, /*?}*/ completableFuture);
         }
 
         @Override
         protected void addTags(HolderLookup.Provider wrapperLookup) {
-            FabricTagProvider<Item>.FabricTagBuilder incompatibleItems = getOrCreateTagBuilder(CrossbowScopingTags.INCOMPATIBLE_ITEMS);
-            incompatibleItems.addOptional(ResourceLocation.fromNamespaceAndPath(PIERCED, "long_crossbow"));
+            /*? <=1.21.1 {*/ /*getOrCreateTagBuilder *//*?} else {*/ getOrCreateRawBuilder /*?}*/(CrossbowScopingTags.INCOMPATIBLE_ITEMS)
+                    ./*? <=1.21.1 {*/ /*addOptional *//*?} else {*/ addOptionalElement /*?}*/(ResourceLocation.fromNamespaceAndPath(PIERCED, "long_crossbow"));
         }
     }
 }

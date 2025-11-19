@@ -68,8 +68,12 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Cro
             Adapted from https://github.com/ekulxam/amarong/blob/f8264bdf61751705497ecca122e5d655c067eba4/src/main/java/survivalblock/amarong/mixin/staff/PlayerEntityMixin.java#L13
             The MIT license can be found in PlayerInventoryMixin
              */
-    @ModifyReturnValue(method = "getItemBySlot", at = @At("RETURN"))
-    private ItemStack returnSpyglassStack(ItemStack original) {
+    //? if <=1.21.1 {
+    /*@ModifyReturnValue(method = "getItemBySlot", at = @At("RETURN"))
+    *///?} else {
+    @Override
+    //?}
+    protected ItemStack returnSpyglassStack(ItemStack original) {
         if (this.crossbow_scoping$usingScope(original)) {
             return this.replaceWithScope(original);
         }

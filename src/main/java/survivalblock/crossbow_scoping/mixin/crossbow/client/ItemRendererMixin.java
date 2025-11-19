@@ -1,4 +1,5 @@
-package survivalblock.crossbow_scoping.mixin.crossbow.client;
+//? if <=1.21.1 {
+/*package survivalblock.crossbow_scoping.mixin.crossbow.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -20,3 +21,4 @@ public abstract class ItemRendererMixin {
         ScopeRenderer.renderScopeOnCrossbow(stack, matrices, vertexConsumers, light, overlay, (ItemRenderer) (Object) this);
     }
 }
+*///?}

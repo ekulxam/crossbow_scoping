@@ -10,14 +10,14 @@
     "crossbow.PlayerEntityMixin",
     "crossbow.PlayerInventoryMixin",
     "crossbow.RangedWeaponItemMixin",
-    "crossbow.ServerPlayNetworkHandlerMixin",
-    "crossbow.TypedActionResultAccessor"
+    "crossbow.ServerPlayNetworkHandlerMixin"
   ],
   "client": [
-    "compat.sodium.client.ItemRendererMixinMixin",
     "crossbow.client.InGameHudMixin",
-    "crossbow.client.ItemRendererMixin",
+    "crossbow.client.ItemModelManagerMixin",
+    "crossbow.client.ItemRenderStateMixin",
     "crossbow.client.MinecraftClientMixin",
+    "crossbow.client.PlayerEntityRendererMixin",
     "crossbow.client.PlayerHeldItemFeatureRendererMixin"
   ],
   "injectors": {

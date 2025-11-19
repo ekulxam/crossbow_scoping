@@ -61,7 +61,7 @@ public final class ScopedCrossbowC2SPayload implements CustomPacketPayload {
             InteractionHand hand = payload.leftHand ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
             player.crossbow_scoping$setAttacking(true);
             ItemStack stack = player.getItemInHand(hand);
-            if (stack.isEmpty() || stack.getOrDefault(CrossbowScopingDataComponentTypes.CROSSBOW_SCOPE, ItemStack.EMPTY).isEmpty() || !CrossbowScoping.isLoaded(stack) || player.getCooldowns().isOnCooldown(stack.getItem())) {
+            if (stack.isEmpty() || stack.getOrDefault(CrossbowScopingDataComponentTypes.CROSSBOW_SCOPE, ItemStack.EMPTY).isEmpty() || !CrossbowScoping.isLoaded(stack) || player.getCooldowns().isOnCooldown(stack/*? <=1.21.1 {*/ /*.getItem() *//*?}*/)) {
                 return;
             }
             stack.use(player.level(), player, hand);

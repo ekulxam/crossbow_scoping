@@ -1,10 +1,10 @@
-package survivalblock.crossbow_scoping.mixin.compat.sodium.client;
+//? if <=1.21.1 {
+/*package survivalblock.crossbow_scoping.mixin.compat.sodium.client;
 
 import com.bawnorton.mixinsquared.TargetHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import survivalblock.crossbow_scoping.client.ScopeRenderer;
 
+@SuppressWarnings("UnusedMixin")
 @Mixin(value = ItemRenderer.class, priority = 3000)
 public abstract class ItemRendererMixinMixin {
 
@@ -22,3 +23,4 @@ public abstract class ItemRendererMixinMixin {
         ScopeRenderer.renderScopeOnCrossbow(stack, matrices, vertexConsumers, light, overlay, (ItemRenderer) (Object) this);
     }
 }
+*///?}

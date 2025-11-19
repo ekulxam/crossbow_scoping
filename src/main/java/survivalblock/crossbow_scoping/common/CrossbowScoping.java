@@ -50,7 +50,7 @@ public class CrossbowScoping implements ModInitializer {
                 isValidCrossbow(stack)
                         && !stack.getOrDefault(CrossbowScopingDataComponentTypes.CROSSBOW_SCOPE, ItemStack.EMPTY).isEmpty()
                         && (!checkLoaded || isLoaded(stack))
-                        && (!checkCooldown || !player.getCooldowns().isOnCooldown(stack.getItem()));
+                        && (!checkCooldown || !player.getCooldowns().isOnCooldown(stack/*? <=1.21.1 {*/ /*.getItem() *//*?}*/));
 		ItemStack stack = player.getUseItem();
 		if (predicate.test(stack)) {
 			return Pair.of(stack, player.getUsedItemHand());
@@ -86,6 +86,10 @@ public class CrossbowScoping implements ModInitializer {
 	}
 
 	public static boolean canInsertSpyglass(ItemStack crossbow, ItemStack potentialSpyglass) {
-		return crossbow.is(CrossbowScopingTags.INCOMPATIBLE_ITEMS) ? potentialSpyglass.isEmpty() : (potentialSpyglass.isEmpty() || potentialSpyglass.getItem() instanceof SpyglassItem);
+		return crossbow.is(CrossbowScopingTags.INCOMPATIBLE_ITEMS) ? potentialSpyglass.isEmpty() : (potentialSpyglass.isEmpty() || isASpyglass(potentialSpyglass));
 	}
+
+    public static boolean isASpyglass(ItemStack potentialSpyglass) {
+        return !potentialSpyglass.isEmpty() && potentialSpyglass.getItem() instanceof SpyglassItem;
+    }
 }

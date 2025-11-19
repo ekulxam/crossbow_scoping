@@ -1,7 +1,10 @@
 package survivalblock.crossbow_scoping.mixin.crossbow;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.level.GameRules;
 
+@Debug(export = true)
 @Mixin(ProjectileWeaponItem.class)
 public class RangedWeaponItemMixin {
 
@@ -38,8 +42,22 @@ public class RangedWeaponItemMixin {
         return value;
     }
 
-    @Inject(method = "shoot", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ProjectileWeaponItem;shootProjectile(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/projectile/Projectile;IFFFLnet/minecraft/world/entity/LivingEntity;)V", shift = At.Shift.AFTER))
+    //? if <=1.21.1 {
+    /*@Inject(method = "shoot", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ProjectileWeaponItem;shootProjectile(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/projectile/Projectile;IFFFLnet/minecraft/world/entity/LivingEntity;)V", shift = At.Shift.AFTER))
     private void sniperVelocity(ServerLevel world, LivingEntity shooter, InteractionHand hand, ItemStack stack, List<ItemStack> projectiles, float speed, float divergence, boolean critical, @Nullable LivingEntity target, CallbackInfo ci, @Local Projectile projectile) {
+    *///?} else {
+    @Inject(method = "shoot", at = @At("HEAD"))
+    private void captureParamsAndHope(ServerLevel level, LivingEntity shooter, InteractionHand hand, ItemStack weapon, List<ItemStack> projectileItems, float velocity, float inaccuracy, boolean isCrit, LivingEntity target, CallbackInfo ci, @Share("stack") LocalRef<ItemStack> stackRef) {
+        stackRef.set(weapon);
+    }
+
+    @Inject(method = "method_61659", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ProjectileWeaponItem;shootProjectile(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/projectile/Projectile;IFFFLnet/minecraft/world/entity/LivingEntity;)V"))
+    private void sniperVelocity(LivingEntity livingEntity, int i, float f, float g, float h, LivingEntity livingEntity2, Projectile projectile, CallbackInfo ci, @Share("stack") LocalRef<ItemStack> stackRef) {
+        if (!(livingEntity.level() instanceof ServerLevel world)) {
+            return;
+        }
+        ItemStack stack = stackRef.get();
+    //?}
         if (!(stack.getItem() instanceof CrossbowItem)) {
             return;
         }

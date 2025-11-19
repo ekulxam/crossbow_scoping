@@ -1,6 +1,7 @@
 package survivalblock.crossbow_scoping.mixin.crossbow;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
@@ -17,9 +18,6 @@ public abstract class LivingEntityMixin {
     @Shadow
     public abstract ItemStack getUseItem();
 
-    @Shadow
-    public abstract boolean isUsingItem();
-
     @ModifyExpressionValue(method = {"updatingUsingItem", "completeUsingItem"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;"))
     protected ItemStack replaceWithScope(ItemStack original) {
         if (!(original.getItem() instanceof CrossbowItem)) {
@@ -34,4 +32,11 @@ public abstract class LivingEntityMixin {
         }
         return original;
     }
+
+    //? if >1.21.1 {
+    @ModifyReturnValue(method = "getItemBySlot", at = @At("RETURN"))
+    protected ItemStack returnSpyglassStack(ItemStack original) {
+        return original;
+    }
+    //?}
 }
