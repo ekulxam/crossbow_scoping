@@ -111,31 +111,4 @@ public class CrossbowItemMixin extends ItemMixin {
             tooltip.add(Text.translatable("item.crossbow_scoping.crossbow.scope", text).setStyle(text.getStyle()));
         }
     }
-
-/*
-    @ModifyReturnValue(method = "getMaxUseTime", at = @At("RETURN"))
-    private int spyglassUseItem(int original, ItemStack stack, LivingEntity user) {
-        if (!CrossbowScoping.isLoaded(stack, true)) {
-            return original;
-        }
-        ItemStack stackInComponents = stack.getOrDefault(CROSSBOW_SCOPE, ItemStack.EMPTY);
-        if (stackInComponents.isEmpty()) {
-            return original;
-        }
-        return stackInComponents.getMaxUseTime(user);
-    }
-
-    @ModifyReturnValue(method = "getUseAction", at = @At(value = "RETURN"))
-    private UseAction spyglassZoom(UseAction original, ItemStack stack) {
-        if (!CrossbowScoping.isLoaded(stack, true)) {
-            return original;
-        }
-        ItemStack stackInComponents = stack.getOrDefault(CROSSBOW_SCOPE, ItemStack.EMPTY);
-        if (stackInComponents.isEmpty()) {
-            return original;
-        }
-        return stackInComponents.getUseAction();
-    }
-
- */
 }

@@ -4,7 +4,7 @@ Crossbow Scoping is a mod that allows you to attach spyglasses to crossbows!
 
 Right-click on a crossbow while holding a spyglass with the mouse cursor to attach the spyglass to the crossbow.
 
-Crossbows with scopes load projectiles normally, however, when using a loaded crossbow with a scope, the use action will be delegated to the scope.
+Crossbows with scopes load projectiles normally; however, when using a loaded crossbow with a scope, the use action will be delegated to the scope.
 Instead, to shoot the projectile(s), you now have to press your attack key/button.
 
 This mod (should have) out-of-the-box compatibility with mods that add custom spyglasses and custom crossbow projectiles. Feel free to open an issue on GitHub if you find an exception!
