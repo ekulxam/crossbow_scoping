@@ -1,6 +1,7 @@
 plugins {
 	id 'fabric-loom' version '1.9-SNAPSHOT'
 	id 'maven-publish'
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 version = project.mod_version
@@ -69,17 +70,13 @@ dependencies {
 	modRuntimeOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
 	modRuntimeOnly "maven.modrinth:sodium:${project.sodium_version}"
 
-	modCompileOnly "maven.modrinth:omnicrossbow:${project.omnicrossbow_version}"
-	modRuntimeOnly "maven.modrinth:omnicrossbow:${project.omnicrossbow_version}"
+    include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${project.mixin_squared_version}")))
 
-	include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${project.mixin_squared_version}")))
+    modCompileOnly "maven.modrinth:omnicrossbow:${project.omnicrossbow_version}"
+	modRuntimeOnly "maven.modrinth:omnicrossbow:${project.omnicrossbow_version}"
 
 	modCompileOnly "com.github.apace100:apoli:${project.apoli_version}"
 	modRuntimeOnly "com.github.apace100:apoli:${project.apoli_version}"
-
-    //modImplementation "maven.modrinth:continuity:3.0.0+1.21"
-    //modImplementation "maven.modrinth:supplementaries:fabric_1.21-3.4.20"
-    //modImplementation "maven.modrinth:moonlight:1.21-2.26.3-fabric"
 }
 
 processResources {
@@ -126,4 +123,15 @@ publishing {
 		// The repositories here will be used for publishing your artifact, not for
 		// retrieving dependencies.
 	}
+}
+
+modrinth {
+    token = "$System.env.MODRINTH_TOKEN"
+    projectId = project.base.archivesName
+    versionNumber = project.version
+    uploadFile = remapJar
+    gameVersions = compatibleVersions.split(", ").toList()
+    loaders = compatibleLoaders.split(", ").toList()
+    changelog = rootProject.file("changelog.md").text
+    syncBodyFrom = "<!--DO NOT EDIT MANUALLY: synced from gh readme-->\n" + rootProject.file("README.md").text
 }

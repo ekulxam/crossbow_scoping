@@ -1,2 +1,3 @@
-Crossbow Scoping 1.1.1+1.21.1
-- Fix sodium breaking scope rendering [#2](https://github.com/ekulxam/crossbow_scoping/issues/2)
+Crossbow Scoping 1.1.2+1.21.1
+- Properly add conditions for sodium mixin
+- Bump MixinSquared version

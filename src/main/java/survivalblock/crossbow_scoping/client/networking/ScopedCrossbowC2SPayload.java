@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import survivalblock.crossbow_scoping.common.CrossbowScoping;
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes;
 
+@SuppressWarnings("ClassCanBeRecord")
 public final class ScopedCrossbowC2SPayload implements CustomPayload {
 
     public static final ScopedCrossbowC2SPayload RIGHT = new ScopedCrossbowC2SPayload(false);

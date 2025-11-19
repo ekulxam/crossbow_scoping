@@ -1,6 +1,7 @@
 {
   "required": true,
   "package": "survivalblock.crossbow_scoping.mixin",
+  "plugin": "survivalblock.crossbow_scoping.common.compat.CrossbowScopingMixinConfigPlugin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "crossbow.CrossbowItemMixin",
@@ -13,6 +14,7 @@
     "crossbow.TypedActionResultAccessor"
   ],
   "client": [
+    "compat.sodium.client.ItemRendererMixinMixin",
     "crossbow.client.InGameHudMixin",
     "crossbow.client.ItemRendererMixin",
     "crossbow.client.MinecraftClientMixin",
