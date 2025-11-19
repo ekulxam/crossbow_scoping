@@ -1,23 +1,23 @@
 package survivalblock.crossbow_scoping.mixin.crossbow;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.StackReference;
-import net.minecraft.item.CrossbowItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.SpyglassItem;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.text.Text;
-import net.minecraft.util.ClickType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Unit;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpyglassItem;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -35,15 +35,15 @@ import static survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComp
 public class CrossbowItemMixin extends ItemMixin {
 
     @Override
-    protected void insertOrExtractSpyglass(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference, CallbackInfoReturnable<Boolean> cir) {
-        if (!ClickType.RIGHT.equals(clickType)) {
+    protected void insertOrExtractSpyglass(ItemStack stack, ItemStack otherStack, Slot slot, ClickAction clickType, Player player, SlotAccess cursorStackReference, CallbackInfoReturnable<Boolean> cir) {
+        if (!ClickAction.SECONDARY.equals(clickType)) {
             return;
         }
         if (!CrossbowScoping.canInsertSpyglass(stack, otherStack)) {
             return;
         }
         ItemStack stackInComponents = stack.getOrDefault(CROSSBOW_SCOPE, ItemStack.EMPTY);
-        if (ItemStack.areEqual(stackInComponents, otherStack)) {
+        if (ItemStack.matches(stackInComponents, otherStack)) {
             return;
         }
         stack.set(CROSSBOW_SCOPE, otherStack.copy());
@@ -52,7 +52,7 @@ public class CrossbowItemMixin extends ItemMixin {
     }
 
     @Override
-    protected void preventMining(BlockState state, World world, BlockPos pos, PlayerEntity miner, CallbackInfoReturnable<Boolean> cir) {
+    protected void preventMining(BlockState state, Level world, BlockPos pos, Player miner, CallbackInfoReturnable<Boolean> cir) {
         miner.crossbow_scoping$setAttacking(true);
         ItemStack stack = CrossbowScoping.getCrossbowWithScope(miner).getFirst();
         miner.crossbow_scoping$setAttacking(false);
@@ -62,30 +62,30 @@ public class CrossbowItemMixin extends ItemMixin {
         cir.setReturnValue(false);
     }
 
-    @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/CrossbowItem;shootAll(Lnet/minecraft/world/World;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/util/Hand;Lnet/minecraft/item/ItemStack;FFLnet/minecraft/entity/LivingEntity;)V", shift = At.Shift.BEFORE), cancellable = true)
-    private void scopeInsteadOfShooting(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir, @Local ItemStack stack) {
-        if (stack.contains(LOADING_PHASE)) {
+    @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/CrossbowItem;performShooting(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/ItemStack;FFLnet/minecraft/world/entity/LivingEntity;)V", shift = At.Shift.BEFORE), cancellable = true)
+    private void scopeInsteadOfShooting(Level world, Player user, InteractionHand hand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir, @Local ItemStack stack) {
+        if (stack.has(LOADING_PHASE)) {
             stack.remove(LOADING_PHASE);
         }
         if (user.crossbow_scoping$isAttacking()) {
             user.crossbow_scoping$setAttacking(false);
             if (user.isUsingItem()) {
-                user.stopUsingItem();
+                user.releaseUsingItem();
             }
-            if (EnchantmentHelper.hasAnyEnchantmentsIn(stack, CrossbowScopingTags.USES_EXTENDED_COOLDOWN)) {
-                user.getItemCooldownManager().set(stack.getItem(), 11);
+            if (EnchantmentHelper.hasTag(stack, CrossbowScopingTags.USES_EXTENDED_COOLDOWN)) {
+                user.getCooldowns().addCooldown(stack.getItem(), 11);
             } else {
-                user.getItemCooldownManager().set(stack.getItem(), 5);
+                user.getCooldowns().addCooldown(stack.getItem(), 5);
             }
             return;
         }
         ItemStack stackInComponents = stack.getOrDefault(CROSSBOW_SCOPE, ItemStack.EMPTY);
         if (!stackInComponents.isEmpty() && stackInComponents.getItem() instanceof SpyglassItem) {
             user.crossbow_scoping$setStartingToScope(stackInComponents);
-            TypedActionResult<ItemStack> result = stackInComponents.use(world, user, hand);
+            InteractionResultHolder<ItemStack> result = stackInComponents.use(world, user, hand);
             user.crossbow_scoping$setStartingToScope(ItemStack.EMPTY);
-            ItemStack value = result.getValue();
-            if (!ItemStack.areEqual(stackInComponents, value)) {
+            ItemStack value = result.getObject();
+            if (!ItemStack.matches(stackInComponents, value)) {
                 if (value.isEmpty()) {
                     stack.remove(CROSSBOW_SCOPE);
                 } else {
@@ -98,17 +98,17 @@ public class CrossbowItemMixin extends ItemMixin {
         }
     }
 
-    @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;setCurrentHand(Lnet/minecraft/util/Hand;)V"))
-    private void setWasLoading(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir, @Local ItemStack stack) {
+    @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;startUsingItem(Lnet/minecraft/world/InteractionHand;)V"))
+    private void setWasLoading(Level world, Player user, InteractionHand hand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir, @Local ItemStack stack) {
         stack.set(LOADING_PHASE, Unit.INSTANCE);
     }
 
-    @Inject(method = "appendTooltip", at = @At("HEAD"))
-    private void appendScopeInTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type, CallbackInfo ci) {
+    @Inject(method = "appendHoverText", at = @At("HEAD"))
+    private void appendScopeInTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag type, CallbackInfo ci) {
         ItemStack stackInComponents = stack.getOrDefault(CROSSBOW_SCOPE, ItemStack.EMPTY);
         if (!stackInComponents.isEmpty()) {
-            Text text = stackInComponents.getName();
-            tooltip.add(Text.translatable("item.crossbow_scoping.crossbow.scope", text).setStyle(text.getStyle()));
+            Component text = stackInComponents.getHoverName();
+            tooltip.add(Component.translatable("item.crossbow_scoping.crossbow.scope", text).setStyle(text.getStyle()));
         }
     }
 }

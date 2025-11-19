@@ -1,9 +1,9 @@
 package survivalblock.crossbow_scoping.mixin.crossbow;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.SpyglassItem;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpyglassItem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,7 +11,7 @@ import survivalblock.crossbow_scoping.common.CrossbowScoping;
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes;
 import survivalblock.crossbow_scoping.common.injected_interface.CrossbowAttackingPlayer;
 
-@Mixin(value = PlayerEntity.class, priority = 10000)
+@Mixin(value = Player.class, priority = 10000)
 public abstract class PlayerEntityMixin extends LivingEntityMixin implements CrossbowAttackingPlayer {
 
     @Unique
@@ -51,16 +51,16 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Cro
             return false;
         }
         if (!this.crossbow_scoping$initialScope.isEmpty()) {
-            boolean initial = ItemStack.areEqual(this.crossbow_scoping$initialScope, scope);
+            boolean initial = ItemStack.matches(this.crossbow_scoping$initialScope, scope);
             if (initial) {
                 return true;
             }
         }
-        ItemStack active = this.getActiveItem();
+        ItemStack active = this.getUseItem();
         if (active == null || active.isEmpty()) {
             return false;
         }
-        return ItemStack.areEqual(active, scope);
+        return ItemStack.matches(active, scope);
     }
 
     /*
@@ -68,7 +68,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Cro
             Adapted from https://github.com/ekulxam/amarong/blob/f8264bdf61751705497ecca122e5d655c067eba4/src/main/java/survivalblock/amarong/mixin/staff/PlayerEntityMixin.java#L13
             The MIT license can be found in PlayerInventoryMixin
              */
-    @ModifyReturnValue(method = "getEquippedStack", at = @At("RETURN"))
+    @ModifyReturnValue(method = "getItemBySlot", at = @At("RETURN"))
     private ItemStack returnSpyglassStack(ItemStack original) {
         if (this.crossbow_scoping$usingScope(original)) {
             return this.replaceWithScope(original);

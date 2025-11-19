@@ -5,15 +5,15 @@ import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ChargedProjectilesComponent;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.CrossbowItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.SpyglassItem;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpyglassItem;
+import net.minecraft.world.item.component.ChargedProjectiles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import survivalblock.crossbow_scoping.client.networking.ScopedCrossbowC2SPayload;
@@ -37,36 +37,36 @@ public class CrossbowScoping implements ModInitializer {
 		ServerPlayNetworking.registerGlobalReceiver(ScopedCrossbowC2SPayload.ID, ScopedCrossbowC2SPayload.Receiver.INSTANCE);
 	}
 
-	public static Identifier id(String path) {
-		return Identifier.of(MOD_ID, path);
+	public static ResourceLocation id(String path) {
+		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
 	}
 
-	public static Pair<ItemStack, Hand> getCrossbowWithScope(PlayerEntity player) {
+	public static Pair<ItemStack, InteractionHand> getCrossbowWithScope(Player player) {
 		return getCrossbowWithScope(player, false, false);
 	}
 
-	public static Pair<ItemStack, Hand> getCrossbowWithScope(PlayerEntity player, boolean checkLoaded, boolean checkCooldown) {
+	public static Pair<ItemStack, InteractionHand> getCrossbowWithScope(Player player, boolean checkLoaded, boolean checkCooldown) {
         Predicate<ItemStack> predicate = (stack) ->
                 isValidCrossbow(stack)
                         && !stack.getOrDefault(CrossbowScopingDataComponentTypes.CROSSBOW_SCOPE, ItemStack.EMPTY).isEmpty()
                         && (!checkLoaded || isLoaded(stack))
-                        && (!checkCooldown || !player.getItemCooldownManager().isCoolingDown(stack.getItem()));
-		ItemStack stack = player.getActiveItem();
+                        && (!checkCooldown || !player.getCooldowns().isOnCooldown(stack.getItem()));
+		ItemStack stack = player.getUseItem();
 		if (predicate.test(stack)) {
-			return Pair.of(stack, player.getActiveHand());
+			return Pair.of(stack, player.getUsedItemHand());
 		}
-		for (Hand hand : Hand.values()) {
-			stack = player.getStackInHand(hand);
+		for (InteractionHand hand : InteractionHand.values()) {
+			stack = player.getItemInHand(hand);
 			if (predicate.test(stack)) {
 				return Pair.of(stack, hand);
 			}
 		}
-		return Pair.of(ItemStack.EMPTY, Hand.MAIN_HAND);
+		return Pair.of(ItemStack.EMPTY, InteractionHand.MAIN_HAND);
 	}
 
 	public static boolean isValidCrossbow(ItemStack stack) {
 		Item item = stack.getItem();
-		return item instanceof CrossbowItem && !stack.isIn(CrossbowScopingTags.INCOMPATIBLE_ITEMS);
+		return item instanceof CrossbowItem && !stack.is(CrossbowScopingTags.INCOMPATIBLE_ITEMS);
 	}
 
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -78,14 +78,14 @@ public class CrossbowScoping implements ModInitializer {
 		if (!isValidCrossbow(stack)) {
 			return false;
 		}
-		if (checkLoading && stack.contains(CrossbowScopingDataComponentTypes.LOADING_PHASE)) {
+		if (checkLoading && stack.has(CrossbowScopingDataComponentTypes.LOADING_PHASE)) {
 			return false;
 		}
-		ChargedProjectilesComponent chargedProjectilesComponent = stack.get(DataComponentTypes.CHARGED_PROJECTILES);
+		ChargedProjectiles chargedProjectilesComponent = stack.get(DataComponents.CHARGED_PROJECTILES);
 		return chargedProjectilesComponent != null && !chargedProjectilesComponent.isEmpty();
 	}
 
 	public static boolean canInsertSpyglass(ItemStack crossbow, ItemStack potentialSpyglass) {
-		return crossbow.isIn(CrossbowScopingTags.INCOMPATIBLE_ITEMS) ? potentialSpyglass.isEmpty() : (potentialSpyglass.isEmpty() || potentialSpyglass.getItem() instanceof SpyglassItem);
+		return crossbow.is(CrossbowScopingTags.INCOMPATIBLE_ITEMS) ? potentialSpyglass.isEmpty() : (potentialSpyglass.isEmpty() || potentialSpyglass.getItem() instanceof SpyglassItem);
 	}
 }

@@ -1,6 +1,6 @@
 package survivalblock.crossbow_scoping.common.injected_interface;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public interface CrossbowAttackingPlayer {
 

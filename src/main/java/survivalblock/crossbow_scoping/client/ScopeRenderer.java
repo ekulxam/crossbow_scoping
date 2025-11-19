@@ -1,15 +1,15 @@
 package survivalblock.crossbow_scoping.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.CrossbowItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.RotationAxis;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes;
 
 @Environment(EnvType.CLIENT)
@@ -18,7 +18,7 @@ public final class ScopeRenderer {
     private ScopeRenderer() {
     }
 
-    public static void renderScopeOnCrossbow(ItemStack stack, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, ItemRenderer itemRenderer) {
+    public static void renderScopeOnCrossbow(ItemStack stack, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay, ItemRenderer itemRenderer) {
         if (!(stack.getItem() instanceof CrossbowItem)) {
             return;
         }
@@ -26,10 +26,10 @@ public final class ScopeRenderer {
         if (otherStack == null || otherStack.isEmpty()) {
             return;
         }
-        matrices.push();
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-135));
+        matrices.pushPose();
+        matrices.mulPose(Axis.ZP.rotationDegrees(-135));
         matrices.translate(-0.707, 0.1, 0.6);
-        itemRenderer.renderItem(otherStack, ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, light, overlay, matrices, vertexConsumers, MinecraftClient.getInstance().world, 0);
-        matrices.pop();
+        itemRenderer.renderStatic(otherStack, ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, light, overlay, matrices, vertexConsumers, Minecraft.getInstance().level, 0);
+        matrices.popPose();
     }
 }

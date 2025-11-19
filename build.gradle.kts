@@ -21,14 +21,15 @@ repositories {
     maven("https://api.modrinth.com/maven")
     mavenLocal()
     maven("https://maven.bawnorton.com/releases")
+    maven ("https://maven.parchmentmc.org")
 
     maven("https://maven.quiltmc.org/repository/release") { name = "QuiltMC" }
     maven("https://maven.ladysnake.org/releases") { name = "Ladysnake Mods" }
     maven("https://maven.ladysnake.org/snapshots") { name = "Ladysnake Mods (snapshots)" }
     maven("https://maven.cafeteria.dev") {
-        // content {
-        //			includeGroup 'net.adriantodt.fabricmc'
-        //		}
+        content {
+            includeGroup("net.adriantodt.fabricmc")
+        }
     }
     maven("https://maven.shedaniel.me/")
     maven("https://maven.ryanliptak.com/")
@@ -58,7 +59,12 @@ dependencies {
 
 	// To change the versions see the gradle.properties file
     minecraft("com.mojang:minecraft:${stonecutter.current.project}")
-    mappings("net.fabricmc:yarn:${property("deps.yarn_mappings")}:v2")
+    mappings (loom.layered {
+        officialMojangMappings()
+        if (hasProperty("deps.parchment")) {
+            parchment("org.parchmentmc.data:parchment-${stonecutter.current.project}:${property("deps.parchment")}@zip")
+        }
+    })
     modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
@@ -69,8 +75,17 @@ dependencies {
 
     mixinsquared("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${project.property("mixin_squared_version")}")
 
-    compat("maven.modrinth:omnicrossbow:${project.property("deps.omnicrossbow")}")
-	compat("com.github.apace100:apoli:${project.property("deps.apoli")}")
+    if (stonecutter.eval(stonecutter.current.version, "=1.21.1")) {
+        compat("maven.modrinth:omnicrossbow:${project.property("deps.omnicrossbow")}")
+        compat("com.github.apace100:apoli:${project.property("deps.apoli")}")
+    }
+}
+
+stonecutter {
+    replacements.string {
+        direction = eval(current.version, ">1.21.10")
+        replace("ResourceLocation", "Identifier")
+    }
 }
 
 fletchingTable {

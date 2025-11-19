@@ -3,11 +3,11 @@ package survivalblock.crossbow_scoping.mixin.crossbow;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.SpyglassItem;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpyglassItem;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import survivalblock.crossbow_scoping.common.CrossbowScoping;
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes;
 
-@Mixin(value = PlayerInventory.class, priority = 10000)
+@Mixin(value = Inventory.class, priority = 10000)
 /*
 begin credit
 Adapted from https://github.com/ekulxam/amarong/blob/f8264bdf61751705497ecca122e5d655c067eba4/src/main/java/survivalblock/amarong/mixin/staff/PlayerInventoryMixin.java#L17
@@ -48,9 +48,9 @@ public class PlayerInventoryMixin {
 
     @Shadow
     @Final
-    public PlayerEntity player;
+    public Player player;
 
-    @ModifyExpressionValue(method = "*", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/DefaultedList;get(I)Ljava/lang/Object;"))
+    @ModifyExpressionValue(method = "*", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/NonNullList;get(I)Ljava/lang/Object;"))
     private Object getScopeStack(Object original) {
         if (!(original instanceof ItemStack stack)) {
             return original;
@@ -68,8 +68,8 @@ public class PlayerInventoryMixin {
         return original;
     }
 
-    @WrapOperation(method = "*", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/DefaultedList;set(ILjava/lang/Object;)Ljava/lang/Object;"))
-    private Object setScopeStack(DefaultedList<?> instance, int index, Object element, Operation<Object> original) {
+    @WrapOperation(method = "*", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/NonNullList;set(ILjava/lang/Object;)Ljava/lang/Object;"))
+    private Object setScopeStack(NonNullList<?> instance, int index, Object element, Operation<Object> original) {
         if (!(element instanceof ItemStack stack)) {
             return original.call(instance, index, element);
         }
