@@ -1,7 +1,7 @@
+//? if >1.21.1 {
 package survivalblock.crossbow_scoping.mixin.crossbow.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Transformation;
 import net.fabricmc.fabric.api.client.rendering.v1.FabricRenderState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -25,13 +26,13 @@ public abstract class ItemRenderStateMixin implements FabricRenderState {
     protected abstract ItemStackRenderState.LayerRenderState firstLayer();
 
     @Shadow
-    private ItemDisplayContext displayContext;
+    ItemDisplayContext displayContext;
 
     @Shadow
     public abstract boolean isEmpty();
 
     @Inject(method = "render", at = @At("RETURN"))
-    private void renderScope(PoseStack matrices, MultiBufferSource bufferSource, int packedLight, int packedOverlay, CallbackInfo ci) {
+    private void renderScope(PoseStack matrices, MultiBufferSource bufferSource, int light, int overlay, CallbackInfo ci) {
         if (this.isEmpty()) {
             return;
         }
@@ -43,10 +44,16 @@ public abstract class ItemRenderStateMixin implements FabricRenderState {
         }
 
         matrices.pushPose();
+        this.crossbow_scoping$applyScopeTransforms(matrices);
+        ScopeRenderer.renderScopeOnCrossbow(scope, matrices, bufferSource, light, overlay, Minecraft.getInstance().getItemRenderer());
+        matrices.popPose();
+    }
+
+    @Unique
+    private void crossbow_scoping$applyScopeTransforms(PoseStack matrices) {
         ItemStackRenderState.LayerRenderState layerRenderState = this.firstLayer();
         ItemTransform transformation = ((ItemRenderStateAccessor.LayerRenderStateAccessor) layerRenderState).crossbow_posing$getTransform();
         if (transformation == ItemTransform.NO_TRANSFORM) {
-            matrices.popPose();
             return;
         }
 
@@ -54,7 +61,6 @@ public abstract class ItemRenderStateMixin implements FabricRenderState {
         boolean leftHand = this.displayContext.leftHand();
         transformation.apply(leftHand, matrices.last());
         matrices.translate(0.5F, 0.5F, 0.5F);
-        //ScopeRenderer.renderScopeOnCrossbow(scope, matrices, bufferSource, packedLight, packedOverlay, Minecraft.getInstance().getItemRenderer());
-        matrices.popPose();
     }
 }
+//?}

@@ -1,12 +1,15 @@
 package survivalblock.crossbow_scoping.mixin.crossbow;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpyglassItem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import survivalblock.crossbow_scoping.common.CrossbowScoping;
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes;
 import survivalblock.crossbow_scoping.common.injected_interface.CrossbowAttackingPlayer;
@@ -42,7 +45,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Cro
         ItemStack scope;
         if (CrossbowScoping.isValidCrossbow(crossbow)) {
             scope = crossbow.getOrDefault(CrossbowScopingDataComponentTypes.CROSSBOW_SCOPE, ItemStack.EMPTY);
-        } else if (crossbow.getItem() instanceof SpyglassItem) {
+        } else if (CrossbowScoping.isASpyglass(crossbow)) {
             scope = crossbow; // in the case that I accidentally pass in the spyglass
         } else {
             scope = ItemStack.EMPTY;
@@ -80,4 +83,11 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Cro
         return original;
     }
     // end credit
+
+    @Override
+    protected void swapCorrectly(Operation<Void> original) {
+        this.crossbow_scoping$setAttacking(true);
+        original.call();
+        this.crossbow_scoping$setAttacking(false);
+    }
 }

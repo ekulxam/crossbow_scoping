@@ -3,27 +3,36 @@ package survivalblock.crossbow_scoping.mixin.crossbow.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HeadedModel;
+import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer;
+//? if >1.21.1 {
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
+//?}
 import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import survivalblock.crossbow_scoping.client.ScopeRenderer;
+import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes;
 
 @Mixin(PlayerItemInHandLayer.class)
 public abstract class PlayerHeldItemFeatureRendererMixin<T extends /*? <=1.21.1 {*/ /*Player *//*?} else {*/ PlayerRenderState /*?}*/, M extends EntityModel<T> & ArmedModel & HeadedModel>
@@ -35,7 +44,7 @@ public abstract class PlayerHeldItemFeatureRendererMixin<T extends /*? <=1.21.1 
     }
 
     @ModifyVariable(method = "renderArmWithSpyglass", at = @At("HEAD"), index = 2, argsOnly = true)
-    private ItemStack renderCrossbowToo(ItemStack scope, @Local(argsOnly = true)LivingEntity living, @Share("crossbow")LocalBooleanRef localBooleanRef) {
+    private ItemStack renderCrossbowToo(ItemStack scope, @Local(argsOnly = true) LivingEntity living, @Share("crossbow") LocalBooleanRef localBooleanRef) {
         localBooleanRef.set(false);
         if (!(living instanceof Player player)) {
             return scope;
@@ -119,9 +128,9 @@ public abstract class PlayerHeldItemFeatureRendererMixin<T extends /*? <=1.21.1 
                 matrices.mulPose(Axis.YP.rotationDegrees(-90));
             }
             //? if <=1.21.1 {
-            matrices.translate(0, -0.1, 1);
-            //?} else {
-            matrices.translate(0.1, -0.1, 0);
+            /*matrices.translate(0, -0.1, 1);
+            *///?} else {
+            matrices.translate(-0.1, 0.1, 0);
             //?}
         }
     }

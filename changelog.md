@@ -1,3 +1,3 @@
-Crossbow Scoping 1.1.2+1.21.1
-- Properly add conditions for sodium mixin
-- Bump MixinSquared version
+Crossbow Scoping 1.1.3
+- Port to 1.21.8 (multiversion)
+- Hopefully fix all rendering

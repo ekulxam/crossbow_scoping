@@ -1,0 +1,7 @@
+{
+  "gamerule.crossbow_scoping:higherPrecision": "Crossbow Scoping - Higher Precision",
+  "gamerule.crossbow_scoping:higherVelocity": "Crossbow Scoping - Higher Velocity",
+  "gamerule.crossbow_scoping:noGravityProjectiles": "Crossbow Scoping - Allow No Gravity Projectiles",
+  "gamerule.crossbow_scoping:velocityMultiplier": "Crossbow Scoping - Velocity Multiplier",
+  "item.crossbow_scoping.crossbow.scope": "Scope - %s"
+}

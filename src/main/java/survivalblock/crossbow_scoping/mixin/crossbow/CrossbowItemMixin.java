@@ -18,6 +18,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpyglassItem;
 import net.minecraft.world.item.TooltipFlag;
+//? if >1.21.1
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -31,6 +32,7 @@ import survivalblock.crossbow_scoping.common.CrossbowScoping;
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingTags;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import static survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes.CROSSBOW_SCOPE;
@@ -96,8 +98,16 @@ public class CrossbowItemMixin extends ItemMixin {
             user.crossbow_scoping$setStartingToScope(stackInComponents);
             /*? <=1.21.1 {*/ /*InteractionResultHolder<ItemStack> *//*?} else {*/ InteractionResult /*?}*/ result = stackInComponents.use(world, user, hand);
             user.crossbow_scoping$setStartingToScope(ItemStack.EMPTY);
+            ItemStack value;
             //? if <=1.21.1 {
-            /*ItemStack value = result.getObject();
+             /*value = result.getObject();
+            *///?} else {
+            if (result instanceof InteractionResult.Success success) {
+                value = Objects.requireNonNullElse(success.heldItemTransformedTo(), stackInComponents);
+            } else {
+                value = stackInComponents;
+            }
+            //?}
             if (!ItemStack.matches(stackInComponents, value)) {
                 if (value.isEmpty()) {
                     stack.remove(CROSSBOW_SCOPE);
@@ -105,7 +115,8 @@ public class CrossbowItemMixin extends ItemMixin {
                     stack.set(CROSSBOW_SCOPE, value);
                 }
             }
-            //noinspection unchecked
+            //? if <=1.21.1 {
+            /*//noinspection unchecked
             ((TypedActionResultAccessor<ItemStack>) result).crossbow_scoping$setValue(stack);
             *///?}
             cir.setReturnValue(result);

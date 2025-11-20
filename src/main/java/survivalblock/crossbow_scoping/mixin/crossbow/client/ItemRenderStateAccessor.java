@@ -1,3 +1,4 @@
+//? if >1.21.1 {
 package survivalblock.crossbow_scoping.mixin.crossbow.client;
 
 import net.minecraft.client.renderer.block.model.ItemTransform;
@@ -16,3 +17,4 @@ public interface ItemRenderStateAccessor {
         ItemTransform crossbow_posing$getTransform();
     }
 }
+//?}
