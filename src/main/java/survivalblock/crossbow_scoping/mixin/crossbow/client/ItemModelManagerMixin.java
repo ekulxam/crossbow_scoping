@@ -17,14 +17,13 @@ import survivalblock.crossbow_scoping.client.ScopeRenderer;
 import survivalblock.crossbow_scoping.common.CrossbowScoping;
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes;
 
+@SuppressWarnings("UnusedMixin")
 @Mixin(ItemModelResolver.class)
 public class ItemModelManagerMixin {
 
     @Inject(method = "appendItemLayers", at = @At("HEAD"))
     private void addCrossbowScopingData(ItemStackRenderState renderState, ItemStack stack, ItemDisplayContext displayContext, Level level, LivingEntity entity, int seed, CallbackInfo ci) {
         if (CrossbowScoping.isASpyglass(stack)) {
-            renderState.setData(ScopeRenderer.IS_SPYGLASS, true);
-
             if (entity instanceof Player player && !stack.isEmpty()) {
                 player.crossbow_scoping$setAttacking(true);
                 ItemStack crossbow = player.getItemInHand(player.getUsedItemHand());

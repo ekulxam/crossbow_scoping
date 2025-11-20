@@ -87,9 +87,11 @@ public abstract class PlayerHeldItemFeatureRendererMixin<T extends /*? <=1.21.1 
 
     @WrapOperation(method = "renderArmWithItem(Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;Lnet/minecraft/client/renderer/item/ItemStackRenderState;Lnet/minecraft/world/entity/HumanoidArm;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/layers/PlayerItemInHandLayer;renderItemHeldToEye(Lnet/minecraft/client/renderer/item/ItemStackRenderState;Lnet/minecraft/world/entity/HumanoidArm;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"))
     private void changeTheRenderState(PlayerItemInHandLayer<T, M> instance, ItemStackRenderState itemStackRenderState, HumanoidArm arm, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, Operation<Void> original, @Local(argsOnly = true) PlayerRenderState playerRenderState) {
-        if (itemStackRenderState.getDataOrDefault(ScopeRenderer.IS_SPYGLASS, false)) {
-            ItemStack crossbow = itemStackRenderState.getDataOrDefault(ScopeRenderer.REVERSE_REFERENCE, ItemStack.EMPTY);
+        ItemStack crossbow = itemStackRenderState.getDataOrDefault(ScopeRenderer.REVERSE_REFERENCE, ItemStack.EMPTY);
 
+        if (crossbow.isEmpty()) {
+            this.crossbow_scoping$crossbowRenderState.clear();
+        } else {
             Minecraft client = Minecraft.getInstance();
 
             client.getItemModelResolver().updateForTopItem(
@@ -116,7 +118,11 @@ public abstract class PlayerHeldItemFeatureRendererMixin<T extends /*? <=1.21.1 
             if (arm == HumanoidArm.LEFT) {
                 matrices.mulPose(Axis.YP.rotationDegrees(-90));
             }
+            //? if <=1.21.1 {
             matrices.translate(0, -0.1, 1);
+            //?} else {
+            matrices.translate(0.1, -0.1, 0);
+            //?}
         }
     }
     //?}

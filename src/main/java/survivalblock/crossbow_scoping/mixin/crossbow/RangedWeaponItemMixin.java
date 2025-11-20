@@ -1,11 +1,14 @@
 package survivalblock.crossbow_scoping.mixin.crossbow;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -46,17 +49,30 @@ public class RangedWeaponItemMixin {
     /*@Inject(method = "shoot", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ProjectileWeaponItem;shootProjectile(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/projectile/Projectile;IFFFLnet/minecraft/world/entity/LivingEntity;)V", shift = At.Shift.AFTER))
     private void sniperVelocity(ServerLevel world, LivingEntity shooter, InteractionHand hand, ItemStack stack, List<ItemStack> projectiles, float speed, float divergence, boolean critical, @Nullable LivingEntity target, CallbackInfo ci, @Local Projectile projectile) {
     *///?} else {
-    @Inject(method = "shoot", at = @At("HEAD"))
-    private void captureParamsAndHope(ServerLevel level, LivingEntity shooter, InteractionHand hand, ItemStack weapon, List<ItemStack> projectileItems, float velocity, float inaccuracy, boolean isCrit, LivingEntity target, CallbackInfo ci, @Share("stack") LocalRef<ItemStack> stackRef) {
-        stackRef.set(weapon);
+    @Unique
+    private final ThreadLocal<ItemStack> crossbow_scoping$weaponNet = ThreadLocal.withInitial(() -> ItemStack.EMPTY);
+
+    @WrapMethod(method = "shoot")
+    private void captureParamsAndHope(ServerLevel level, LivingEntity shooter, InteractionHand hand, ItemStack weapon, List<ItemStack> projectileItems, float velocity, float inaccuracy, boolean isCrit, LivingEntity target, Operation<Void> original, @Share("stack") LocalRef<ItemStack> stackRef) {
+        this.crossbow_scoping$weaponNet.set(weapon);
+
+        try {
+            original.call(level, shooter, hand, weapon, projectileItems, velocity, inaccuracy, isCrit, target);
+        } catch (Throwable throwable) {
+            this.crossbow_scoping$weaponNet.set(ItemStack.EMPTY);
+            throw throwable;
+        }
+
+        this.crossbow_scoping$weaponNet.set(ItemStack.EMPTY);
     }
 
     @Inject(method = "method_61659", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ProjectileWeaponItem;shootProjectile(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/projectile/Projectile;IFFFLnet/minecraft/world/entity/LivingEntity;)V"))
-    private void sniperVelocity(LivingEntity livingEntity, int i, float f, float g, float h, LivingEntity livingEntity2, Projectile projectile, CallbackInfo ci, @Share("stack") LocalRef<ItemStack> stackRef) {
+    private void sniperVelocity(LivingEntity livingEntity, int i, float f, float g, float h, LivingEntity livingEntity2, Projectile projectile, CallbackInfo ci) {
         if (!(livingEntity.level() instanceof ServerLevel world)) {
             return;
         }
-        ItemStack stack = stackRef.get();
+
+        ItemStack stack = this.crossbow_scoping$weaponNet.get();
     //?}
         if (!(stack.getItem() instanceof CrossbowItem)) {
             return;
