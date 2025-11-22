@@ -95,6 +95,10 @@ public class CrossbowItemMixin extends ItemMixin {
         }
         ItemStack stackInComponents = stack.getOrDefault(CROSSBOW_SCOPE, ItemStack.EMPTY);
         if (!stackInComponents.isEmpty() && stackInComponents.getItem() instanceof SpyglassItem) {
+            if (user.getCooldowns().isOnCooldown(stack/*? <=1.21.1 {*/ /*.getItem() *//*?}*/)) {
+                cir.setReturnValue(/*? <=1.21.1 {*/ /*InteractionResultHolder.pass(stack) *//*?} else {*/ InteractionResult.PASS /*?}*/);
+                return;
+            }
             user.crossbow_scoping$setStartingToScope(stackInComponents);
             /*? <=1.21.1 {*/ /*InteractionResultHolder<ItemStack> *//*?} else {*/ InteractionResult /*?}*/ result = stackInComponents.use(world, user, hand);
             user.crossbow_scoping$setStartingToScope(ItemStack.EMPTY);

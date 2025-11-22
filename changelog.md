@@ -1,3 +1,3 @@
-Crossbow Scoping 1.1.3
-- Port to 1.21.8 (multiversion)
-- Hopefully fix all rendering
+Crossbow Scoping 1.1.4
+- Add cooldown checks for spyglass
+- Fix crash on 1.21.1 with sodium
