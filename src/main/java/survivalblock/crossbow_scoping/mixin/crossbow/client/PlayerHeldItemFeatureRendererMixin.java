@@ -16,10 +16,12 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer;
-//? if >1.21.1 {
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+//? if =1.21.10
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+//? if =1.21.8
+/*import net.minecraft.client.renderer.entity.state.PlayerRenderState;*/
+//? if >1.21.1
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-//?}
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -35,7 +37,14 @@ import survivalblock.crossbow_scoping.client.ScopeRenderer;
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes;
 
 @Mixin(PlayerItemInHandLayer.class)
-public abstract class PlayerHeldItemFeatureRendererMixin<T extends /*? <=1.21.1 {*/ /*Player *//*?} else {*/ PlayerRenderState /*?}*/, M extends EntityModel<T> & ArmedModel & HeadedModel>
+public abstract class PlayerHeldItemFeatureRendererMixin<T extends //? if =1.21.1 {
+        /*Player
+*///?} elif =1.21.8 {
+/*PlayerRenderState
+ *///?} else if =1.21.10 {
+        AvatarRenderState
+ //?}
+        , M extends EntityModel<T> & ArmedModel & HeadedModel>
         extends ItemInHandLayer<T, M> {
 
     //? if <=1.21.1 {
