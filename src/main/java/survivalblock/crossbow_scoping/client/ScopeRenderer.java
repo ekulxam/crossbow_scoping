@@ -19,6 +19,7 @@ import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import survivalblock.crossbow_scoping.common.CrossbowScoping;
+import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes;
 //? if >1.21.1 && <1.21.9
 /*import survivalblock.crossbow_scoping.mixin.crossbow.client.ItemRendererAccessor;*/
 
