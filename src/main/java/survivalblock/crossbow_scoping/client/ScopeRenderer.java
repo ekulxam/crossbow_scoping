@@ -60,7 +60,7 @@ public final class ScopeRenderer {
         matrices.translate(0, 0.1, 0.1);
         //? if >1.21.8
         final ItemStackRenderState SCOPE_RENDER_STATE = new ItemStackRenderState();
-        /*? <=1.21.8 {*/ /*((ItemRendererAccessor) itemRenderer).crossbow_scoping$getItemModelManager() *//*?} else {*/ Minecraft.getInstance().getItemModelResolver() /*?}*/
+        /*? <=1.21.8 && >1.21.1 {*/ /*((ItemRendererAccessor) itemRenderer).crossbow_scoping$getItemModelManager() *//*?} else {*/ Minecraft.getInstance().getItemModelResolver() /*?}*/
                 .updateForTopItem(SCOPE_RENDER_STATE, scope, displayContext, world, null, 0);
         SCOPE_RENDER_STATE.setAnimated();
         SCOPE_RENDER_STATE.appendModelIdentityElement("crossbow_scoping:scope");
