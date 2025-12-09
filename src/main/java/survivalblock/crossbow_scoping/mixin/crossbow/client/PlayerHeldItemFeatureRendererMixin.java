@@ -13,6 +13,8 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HeadedModel;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+//? if >1.21.8
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer;
@@ -46,6 +48,14 @@ public abstract class PlayerHeldItemFeatureRendererMixin<T extends //? if =1.21.
  //?}
         , M extends EntityModel<T> & ArmedModel & HeadedModel>
         extends ItemInHandLayer<T, M> {
+    //? if >1.21.1 {
+    @Unique
+    private final ItemStackRenderState crossbow_scoping$crossbowRenderState = new ItemStackRenderState();
+
+    public PlayerHeldItemFeatureRendererMixin(RenderLayerParent<T, M> renderer) {
+        super(renderer);
+    }
+    //?}
 
     //? if <=1.21.1 {
     /*public PlayerHeldItemFeatureRendererMixin(RenderLayerParent<T, M> context, ItemInHandRenderer heldItemRenderer) {
@@ -95,15 +105,9 @@ public abstract class PlayerHeldItemFeatureRendererMixin<T extends //? if =1.21.
             matrices.translate(0, -0.1, 1);
         }
     }
-    *///?} else {
-    @Unique
-    private final ItemStackRenderState crossbow_scoping$crossbowRenderState = new ItemStackRenderState();
+    *///?} else if =1.21.8 {
 
-    public PlayerHeldItemFeatureRendererMixin(RenderLayerParent<T, M> renderer) {
-        super(renderer);
-    }
-
-    @WrapOperation(method = "renderArmWithItem(Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;Lnet/minecraft/client/renderer/item/ItemStackRenderState;Lnet/minecraft/world/entity/HumanoidArm;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/layers/PlayerItemInHandLayer;renderItemHeldToEye(Lnet/minecraft/client/renderer/item/ItemStackRenderState;Lnet/minecraft/world/entity/HumanoidArm;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"))
+    /*@WrapOperation(method = "renderArmWithItem(Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;Lnet/minecraft/client/renderer/item/ItemStackRenderState;Lnet/minecraft/world/entity/HumanoidArm;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/layers/PlayerItemInHandLayer;renderItemHeldToEye(Lnet/minecraft/client/renderer/item/ItemStackRenderState;Lnet/minecraft/world/entity/HumanoidArm;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"))
     private void changeTheRenderState(PlayerItemInHandLayer<T, M> instance, ItemStackRenderState itemStackRenderState, HumanoidArm arm, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, Operation<Void> original, @Local(argsOnly = true) PlayerRenderState playerRenderState) {
         ItemStack crossbow = itemStackRenderState.getDataOrDefault(ScopeRenderer.REVERSE_REFERENCE, ItemStack.EMPTY);
 
@@ -136,12 +140,55 @@ public abstract class PlayerHeldItemFeatureRendererMixin<T extends //? if =1.21.
             if (arm == HumanoidArm.LEFT) {
                 matrices.mulPose(Axis.YP.rotationDegrees(-90));
             }
-            //? if <=1.21.1 {
-            /*matrices.translate(0, -0.1, 1);
-            *///?} else {
             matrices.translate(-0.1, 0.1, 0);
-            //?}
         }
+    }
+    *///?} else {
+    @WrapOperation(method = "submitArmWithItem(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;Lnet/minecraft/client/renderer/item/ItemStackRenderState;Lnet/minecraft/world/entity/HumanoidArm;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/layers/PlayerItemInHandLayer;renderItemHeldToEye(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;Lnet/minecraft/world/entity/HumanoidArm;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V"))
+    private void changeTheRenderState(PlayerItemInHandLayer<T, M> instance, AvatarRenderState avatarRenderState, HumanoidArm arm, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, Operation<Void> original, @Local(argsOnly = true) ItemStackRenderState itemStackRenderState) {
+        ItemStack crossbow = itemStackRenderState.getDataOrDefault(ScopeRenderer.REVERSE_REFERENCE, ItemStack.EMPTY);
+
+        if (crossbow.isEmpty()) {
+            this.crossbow_scoping$crossbowRenderState.clear();
+        } else {
+            Minecraft client = Minecraft.getInstance();
+
+            client.getItemModelResolver().updateForTopItem(
+                    this.crossbow_scoping$crossbowRenderState,
+                    crossbow,
+                    arm == HumanoidArm.RIGHT ? ItemDisplayContext.THIRD_PERSON_RIGHT_HAND : ItemDisplayContext.THIRD_PERSON_LEFT_HAND,
+                    client.level,
+                    null,
+                    0
+            );
+
+            avatarRenderState.setData(ScopeRenderer.CROSSBOW_TO_HEAD, this.crossbow_scoping$crossbowRenderState);
+        }
+
+        original.call(instance, avatarRenderState, arm, poseStack, submitNodeCollector, i);
+    }
+
+    @Inject(method = "renderItemHeldToEye", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", shift = At.Shift.AFTER))
+    private void fixCrossbowTransforms(AvatarRenderState renderState, HumanoidArm arm, PoseStack matrices, SubmitNodeCollector nodeCollector, int packedLight, CallbackInfo ci, @Share("scoping") LocalBooleanRef scoping) {
+        boolean transformSpecial = renderState.getData(ScopeRenderer.CROSSBOW_TO_HEAD) == this.crossbow_scoping$crossbowRenderState;
+        scoping.set(transformSpecial);
+        if (transformSpecial) {
+            // 1.6 / 0.9 = 1.7777...
+            matrices.scale(1.778f, 1.778f, 1.778f);
+            matrices.mulPose(Axis.YP.rotationDegrees(15));
+            if (arm == HumanoidArm.LEFT) {
+                matrices.mulPose(Axis.YP.rotationDegrees(-90));
+            }
+            matrices.translate(-0.1, -0.1, 0);
+        }
+    }
+
+    @WrapOperation(method = "renderItemHeldToEye", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/item/ItemStackRenderState;submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V"))
+    private void useCrossbowRenderState(ItemStackRenderState instance, PoseStack matrices, SubmitNodeCollector renderQueue, int light, int overlay, int outlineColor, Operation<Void> original, @Share("scoping") LocalBooleanRef scoping) {
+        if (scoping.get()) {
+            instance = this.crossbow_scoping$crossbowRenderState;
+        }
+        original.call(instance, matrices, renderQueue, light, overlay, outlineColor);
     }
     //?}
 }

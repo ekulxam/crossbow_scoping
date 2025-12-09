@@ -1,5 +1,5 @@
-//? if >1.21.1 {
-package survivalblock.crossbow_scoping.mixin.crossbow.client;
+//? if >1.21.1 && <1.21.9 {
+/*package survivalblock.crossbow_scoping.mixin.crossbow.client;
 
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.item.ItemModelResolver;
@@ -13,4 +13,4 @@ public interface ItemRendererAccessor {
     @Accessor("resolver")
     ItemModelResolver crossbow_scoping$getItemModelManager();
 }
-//?}
+*///?}

@@ -3,6 +3,8 @@ package survivalblock.crossbow_scoping.mixin.crossbow.client;
 
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
+//? if >1.21.8
+import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -21,7 +23,7 @@ import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTy
 public class ItemModelManagerMixin {
 
     @Inject(method = "appendItemLayers", at = @At("HEAD"))
-    private void addCrossbowScopingData(ItemStackRenderState renderState, ItemStack stack, ItemDisplayContext displayContext, Level level, LivingEntity entity, int seed, CallbackInfo ci) {
+    private void addCrossbowScopingData(ItemStackRenderState renderState, ItemStack stack, ItemDisplayContext displayContext, Level level, /*? <=1.21.8 {*/ /*LivingEntity *//*?} else {*/ ItemOwner /*?}*/ entity, int seed, CallbackInfo ci) {
         if (CrossbowScoping.isASpyglass(stack)) {
             if (entity instanceof Player player && !stack.isEmpty()) {
                 player.crossbow_scoping$setAttacking(true);
