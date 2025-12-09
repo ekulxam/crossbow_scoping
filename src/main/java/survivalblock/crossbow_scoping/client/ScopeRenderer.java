@@ -30,7 +30,7 @@ public final class ScopeRenderer {
     public static final RenderStateDataKey<ItemStack> REVERSE_REFERENCE = RenderStateDataKey.create(CrossbowScoping.id("reverse_reference")::toString);
     //?}
 
-    //? if <1.21.9
+    //? if <1.21.9 && >1.21.1
     /*private static final ItemStackRenderState SCOPE_RENDER_STATE = new ItemStackRenderState();*/
 
     //? if >=1.21.10
