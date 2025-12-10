@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer;
-//? if =1.21.10
+//? if >=1.21.10
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 //? if =1.21.8
 /*import net.minecraft.client.renderer.entity.state.PlayerRenderState;*/
@@ -43,7 +43,7 @@ public abstract class PlayerHeldItemFeatureRendererMixin<T extends //? if =1.21.
         /*Player
 *///?} elif =1.21.8 {
 /*PlayerRenderState
- *///?} else if =1.21.10 {
+ *///?} else if >=1.21.10 {
         AvatarRenderState
  //?}
         , M extends EntityModel<T> & ArmedModel & HeadedModel>
@@ -144,7 +144,10 @@ public abstract class PlayerHeldItemFeatureRendererMixin<T extends //? if =1.21.
         }
     }
     *///?} else {
-    @WrapOperation(method = "submitArmWithItem(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;Lnet/minecraft/client/renderer/item/ItemStackRenderState;Lnet/minecraft/world/entity/HumanoidArm;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/layers/PlayerItemInHandLayer;renderItemHeldToEye(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;Lnet/minecraft/world/entity/HumanoidArm;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V"))
+    @WrapOperation(
+            method = /*? <1.21.11 {*/ "submitArmWithItem(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;Lnet/minecraft/client/renderer/item/ItemStackRenderState;Lnet/minecraft/world/entity/HumanoidArm;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V" /*?} else {*/ /*"submitArmWithItem(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;Lnet/minecraft/client/renderer/item/ItemStackRenderState;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/HumanoidArm;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V" *//*?}*/,
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/layers/PlayerItemInHandLayer;renderItemHeldToEye(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;Lnet/minecraft/world/entity/HumanoidArm;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V")
+    )
     private void changeTheRenderState(PlayerItemInHandLayer<T, M> instance, AvatarRenderState avatarRenderState, HumanoidArm arm, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, Operation<Void> original, @Local(argsOnly = true) ItemStackRenderState itemStackRenderState) {
         ItemStack crossbow = itemStackRenderState.getDataOrDefault(ScopeRenderer.REVERSE_REFERENCE, ItemStack.EMPTY);
 

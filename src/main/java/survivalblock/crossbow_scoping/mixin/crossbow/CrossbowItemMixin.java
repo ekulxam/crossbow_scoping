@@ -7,7 +7,7 @@ import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 //? <=1.21.1
-/*import net.minecraft.world.InteractionResultHolder;*/
+//import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;

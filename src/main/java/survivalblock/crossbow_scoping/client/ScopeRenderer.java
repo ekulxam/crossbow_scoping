@@ -67,7 +67,7 @@ public final class ScopeRenderer {
         SCOPE_RENDER_STATE.appendModelIdentityElement("crossbow_scoping:scope");
         SCOPE_RENDER_STATE./*? <=1.21.8 {*/ /*render *//*?} else {*/ submit /*?}*/(matrices, /*? <=1.21.8 {*/ /*vertexConsumers *//*?} else {*/ renderQueue /*?}*/, light, overlay /*? >1.21.8 {*/, outlineColor /*?}*/);
         //? if <1.21.9
-        /*SCOPE_RENDER_STATE.clear();*/
+        //SCOPE_RENDER_STATE.clear();
         //?}
         matrices.popPose();
     }

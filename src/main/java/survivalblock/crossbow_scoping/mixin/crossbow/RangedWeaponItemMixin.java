@@ -3,8 +3,17 @@ package survivalblock.crossbow_scoping.mixin.crossbow;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ProjectileWeaponItem;
+//? if <1.21.11
+import net.minecraft.world.level.GameRules;
+//? if >=1.21.11
+//import net.minecraft.world.level.gamerules.GameRules;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,13 +27,6 @@ import survivalblock.crossbow_scoping.common.init.CrossbowScopingTags;
 import java.util.List;
 import java.util.function.Consumer;
 
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ProjectileWeaponItem;
-import net.minecraft.world.level.GameRules;
-
 @Mixin(ProjectileWeaponItem.class)
 public class RangedWeaponItemMixin {
 
@@ -36,7 +38,7 @@ public class RangedWeaponItemMixin {
         if (stack.getOrDefault(CrossbowScopingDataComponentTypes.CROSSBOW_SCOPE, ItemStack.EMPTY).isEmpty()) {
             return value;
         }
-        if (serverWorld.getGameRules().getBoolean(CrossbowScopingGameRules.HIGHER_PRECISION)) {
+        if (CrossbowScopingGameRules.getBoolean(serverWorld.getGameRules(), CrossbowScopingGameRules.HIGHER_PRECISION)) {
             return value * 0.2f;
         }
         return value;
@@ -58,10 +60,10 @@ public class RangedWeaponItemMixin {
                 return;
             }
             GameRules gameRules = world.getGameRules();
-            if (gameRules.getBoolean(CrossbowScopingGameRules.HIGHER_VELOCITY)) {
-                projectile.setDeltaMovement(projectile.getDeltaMovement().scale(gameRules.getRule(CrossbowScopingGameRules.VELOCITY_MULTIPLIER).get()));
+            if (CrossbowScopingGameRules.getBoolean(gameRules, CrossbowScopingGameRules.HIGHER_VELOCITY)) {
+                projectile.setDeltaMovement(projectile.getDeltaMovement().scale(CrossbowScopingGameRules.getDouble(gameRules, CrossbowScopingGameRules.VELOCITY_MULTIPLIER)));
             }
-            if (gameRules.getBoolean(CrossbowScopingGameRules.NO_GRAVITY_PROJECTILES) && projectile.getType().is(CrossbowScopingTags.ALLOW_NO_GRAVITY)) {
+            if (CrossbowScopingGameRules.getBoolean(gameRules, CrossbowScopingGameRules.NO_GRAVITY_PROJECTILES) && projectile.getType().is(CrossbowScopingTags.ALLOW_NO_GRAVITY)) {
                 projectile.setNoGravity(true);
             }
             return;
