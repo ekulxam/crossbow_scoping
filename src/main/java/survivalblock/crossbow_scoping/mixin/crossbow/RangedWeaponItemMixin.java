@@ -45,14 +45,14 @@ public class RangedWeaponItemMixin {
     }
 
     //? if <=1.21.1 {
-    /*@Inject(method = "shoot", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ProjectileWeaponItem;shootProjectile(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/projectile/Projectile;IFFFLnet/minecraft/world/entity/LivingEntity;)V", shift = At.Shift.AFTER))
+    @Inject(method = "shoot", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ProjectileWeaponItem;shootProjectile(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/projectile/Projectile;IFFFLnet/minecraft/world/entity/LivingEntity;)V", shift = At.Shift.AFTER))
     private void sniperVelocity(ServerLevel world, LivingEntity shooter, InteractionHand hand, ItemStack stack, List<ItemStack> projectiles, float speed, float divergence, boolean critical, @Nullable LivingEntity target, CallbackInfo ci, @Local Projectile projectile) {
-    *///?} else {
-    @WrapOperation(method = "shoot", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/Projectile;spawnProjectile(Lnet/minecraft/world/entity/projectile/Projectile;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;Ljava/util/function/Consumer;)Lnet/minecraft/world/entity/projectile/Projectile;"))
+    //?} else {
+    /*@WrapOperation(method = "shoot", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/Projectile;spawnProjectile(Lnet/minecraft/world/entity/projectile/Projectile;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;Ljava/util/function/Consumer;)Lnet/minecraft/world/entity/projectile/Projectile;"))
     private Projectile sniperVelocity(Projectile first, ServerLevel world, ItemStack projectileStack, Consumer<Projectile> consumer, Operation<Projectile> original, @Local(argsOnly = true) ItemStack stack) {
         Consumer<Projectile> sniper = projectile -> {
             consumer.accept(projectile);
-        //?}
+        *///?}
             if (!(stack.getItem() instanceof CrossbowItem)) {
                 return;
             }
@@ -68,8 +68,8 @@ public class RangedWeaponItemMixin {
             }
             return;
         //? if >1.21.1 {
-        };
+        /*};
         return original.call(first, world, projectileStack, sniper);
-        //?}
+        *///?}
     }
 }

@@ -39,11 +39,11 @@ public abstract class LivingEntityMixin {
     }
 
     //? if >1.21.1 {
-    @ModifyReturnValue(method = "getItemBySlot", at = @At("RETURN"))
+    /*@ModifyReturnValue(method = "getItemBySlot", at = @At("RETURN"))
     protected ItemStack returnSpyglassStack(ItemStack original) {
         return original;
     }
-    //?}
+    *///?}
 
     @WrapMethod(method = "swapHandItems")
     protected void swapCorrectly(Operation<Void> original) {

@@ -72,10 +72,10 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Cro
             The MIT license can be found in PlayerInventoryMixin
              */
     //? if <=1.21.1 {
-    /*@ModifyReturnValue(method = "getItemBySlot", at = @At("RETURN"))
-    *///?} else {
-    @Override
-    //?}
+    @ModifyReturnValue(method = "getItemBySlot", at = @At("RETURN"))
+    //?} else {
+    /*@Override
+    *///?}
     protected ItemStack returnSpyglassStack(ItemStack original) {
         if (this.crossbow_scoping$usingScope(original)) {
             return this.replaceWithScope(original);

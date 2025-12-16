@@ -50,7 +50,7 @@ public class CrossbowScoping implements ModInitializer {
                 isValidCrossbow(stack)
                         && !stack.getOrDefault(CrossbowScopingDataComponentTypes.CROSSBOW_SCOPE, ItemStack.EMPTY).isEmpty()
                         && (!checkLoaded || isLoaded(stack))
-                        && (!checkCooldown || !player.getCooldowns().isOnCooldown(stack/*? <=1.21.1 {*/ /*.getItem() *//*?}*/));
+                        && (!checkCooldown || !player.getCooldowns().isOnCooldown(stack/*? <=1.21.1 {*/ .getItem() /*?}*/));
 		ItemStack stack = player.getUseItem();
 		if (predicate.test(stack)) {
 			return Pair.of(stack, player.getUsedItemHand());

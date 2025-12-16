@@ -11,7 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 //? if >1.21.1
-import net.minecraft.world.item.component.TooltipDisplay;
+//import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,12 +32,12 @@ public class ItemMixin {
     }
 
     //? if <=1.21.1 {
-    /*@Inject(method = "canAttackBlock", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "canAttackBlock", at = @At("HEAD"), cancellable = true)
     protected void preventMining(BlockState state, Level world, BlockPos pos, Player miner, CallbackInfoReturnable<Boolean> cir) {
 
     }
-    *///?} else {
-    @Inject(method = "canDestroyBlock", at = @At("HEAD"), cancellable = true)
+    //?} else {
+    /*@Inject(method = "canDestroyBlock", at = @At("HEAD"), cancellable = true)
     protected void preventMining(ItemStack stack, BlockState state, Level level, BlockPos pos, LivingEntity entity, CallbackInfoReturnable<Boolean> cir) {
 
     }
@@ -45,5 +45,5 @@ public class ItemMixin {
     @Inject(method = "appendHoverText", at = @At("HEAD"))
     protected void appendScopeInTooltip(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag, CallbackInfo ci) {
     }
-    //?}
+    *///?}
 }

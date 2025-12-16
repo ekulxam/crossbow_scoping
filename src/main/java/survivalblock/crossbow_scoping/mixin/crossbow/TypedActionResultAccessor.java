@@ -1,5 +1,5 @@
 //? if <=1.21.1 {
-/*package survivalblock.crossbow_scoping.mixin.crossbow;
+package survivalblock.crossbow_scoping.mixin.crossbow;
 
 import net.minecraft.world.InteractionResultHolder;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,4 +14,4 @@ public interface TypedActionResultAccessor<T> {
     @Accessor("object")
     void crossbow_scoping$setValue(T value);
 }
-*///?}
+//?}

@@ -1,5 +1,5 @@
 //? if <=1.21.1 {
-/*package survivalblock.crossbow_scoping.mixin.compat.sodium.client;
+package survivalblock.crossbow_scoping.mixin.compat.sodium.client;
 
 import com.bawnorton.mixinsquared.TargetHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -25,4 +25,4 @@ public abstract class ItemRendererMixinMixin {
         ScopeRenderer.renderScopeOnCrossbow(stack, matrices, vertexConsumers, light, overlay, (ItemRenderer) (Object) this);
     }
 }
-*///?}
+//?}

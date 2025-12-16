@@ -1,12 +1,12 @@
 //? if >1.21.1 {
-package survivalblock.crossbow_scoping.mixin.crossbow.client;
+/*package survivalblock.crossbow_scoping.mixin.crossbow.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.fabric.api.client.rendering.v1.FabricRenderState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 //? if >1.21.8
-import net.minecraft.client.renderer.SubmitNodeCollector;
+//import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -33,23 +33,23 @@ public abstract class ItemRenderStateMixin implements FabricRenderState {
     @Shadow
     public abstract boolean isEmpty();
 
-    @Inject(method = /*? <=1.21.8 {*/ /*"render" *//*?} else {*/ "submit" /*?}*/, at = @At("RETURN"))
-    private void renderScope(PoseStack matrices, /*? <=1.21.8 {*/ /*MultiBufferSource vertexConsumers *//*?} else {*/ SubmitNodeCollector renderQueue /*?}*/, int light, int overlay, /*? >1.21.8 {*/ int outlineColor, /*?}*/ CallbackInfo ci) {
+    @Inject(method = /^? <=1.21.8 {^/ "render" /^?} else {^/ /^"submit" ^//^?}^/, at = @At("RETURN"))
+    private void renderScope(PoseStack matrices, /^? <=1.21.8 {^/ MultiBufferSource vertexConsumers /^?} else {^/ /^SubmitNodeCollector renderQueue ^//^?}^/, int light, int overlay, /^? >1.21.8 {^/ /^int outlineColor, ^//^?}^/ CallbackInfo ci) {
         if (this.isEmpty()) {
             //? if >=1.21.9
-            return;
+            //return;
         }
 
         ItemStack scope = this.getDataOrDefault(ScopeRenderer.SCOPE, ItemStack.EMPTY);
 
         if (scope.isEmpty()) {
             //? if >=1.21.9
-            return;
+            //return;
         }
 
         matrices.pushPose();
         this.crossbow_scoping$applyScopeTransforms(matrices);
-        ScopeRenderer.renderScopeOnCrossbow(scope, matrices, /*? <=1.21.8 {*/ /*vertexConsumers *//*?} else {*/ renderQueue /*?}*/, light, overlay, Minecraft.getInstance().getItemRenderer() /*? >1.21.8 {*/, outlineColor /*?}*/);
+        ScopeRenderer.renderScopeOnCrossbow(scope, matrices, /^? <=1.21.8 {^/ vertexConsumers /^?} else {^/ /^renderQueue ^//^?}^/, light, overlay, Minecraft.getInstance().getItemRenderer() /^? >1.21.8 {^//^, outlineColor ^//^?}^/);
         matrices.popPose();
     }
 
@@ -67,4 +67,4 @@ public abstract class ItemRenderStateMixin implements FabricRenderState {
         matrices.translate(0.5F, 0.5F, 0.5F);
     }
 }
-//?}
+*///?}

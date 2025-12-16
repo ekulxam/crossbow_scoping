@@ -22,38 +22,38 @@ public class CrossbowScopingTagGenerator {
 
         @Override
         protected void addTags(HolderLookup.Provider wrapperLookup) {
-            /*? <=1.21.1 {*/ /*getOrCreateTagBuilder *//*?} else {*/ valueLookupBuilder /*?}*/(CrossbowScopingTags.ALLOW_NO_GRAVITY)
+            /*? <=1.21.1 {*/ getOrCreateTagBuilder /*?} else {*/ /*valueLookupBuilder *//*?}*/(CrossbowScopingTags.ALLOW_NO_GRAVITY)
                     .add(EntityType.ARROW, EntityType.SPECTRAL_ARROW, EntityType.FIREWORK_ROCKET);
         }
     }
 
-    public static class CrossbowScopingEnchantmentTagGenerator extends FabricTagProvider/*? <=1.21.1 {*/ /*.EnchantmentTagProvider *//*?} else {*/ <Enchantment> /*?}*/ {
+    public static class CrossbowScopingEnchantmentTagGenerator extends FabricTagProvider/*? <=1.21.1 {*/ .EnchantmentTagProvider /*?} else {*/ /*<Enchantment> *//*?}*/ {
 
         private static final String OMNICROSSBOW = "omnicrossbow";
 
         public CrossbowScopingEnchantmentTagGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
-            super(output, /*? >1.21.1 {*/ Registries.ENCHANTMENT, /*?}*/ completableFuture);
+            super(output, /*? >1.21.1 {*/ /*Registries.ENCHANTMENT, *//*?}*/ completableFuture);
         }
 
         @Override
         protected void addTags(HolderLookup.Provider wrapperLookup) {
-            /*? <=1.21.1 {*/ /*getOrCreateTagBuilder *//*?} else {*/ getOrCreateRawBuilder /*?}*/(CrossbowScopingTags.USES_EXTENDED_COOLDOWN)
-                    ./*? <=1.21.1 {*/ /*addOptional *//*?} else {*/ addOptionalElement /*?}*/(ResourceLocation.fromNamespaceAndPath(OMNICROSSBOW, "multichambered"));
+            /*? <=1.21.1 {*/ getOrCreateTagBuilder /*?} else {*/ /*getOrCreateRawBuilder *//*?}*/(CrossbowScopingTags.USES_EXTENDED_COOLDOWN)
+                    ./*? <=1.21.1 {*/ addOptional /*?} else {*/ /*addOptionalElement *//*?}*/(ResourceLocation.fromNamespaceAndPath(OMNICROSSBOW, "multichambered"));
         }
     }
 
-    public static class CrossbowScopingItemTagGenerator extends FabricTagProvider/*? <=1.21.1 {*/ /*.ItemTagProvider *//*?} else {*/ <Item> /*?}*/ {
+    public static class CrossbowScopingItemTagGenerator extends FabricTagProvider/*? <=1.21.1 {*/ .ItemTagProvider /*?} else {*/ /*<Item> *//*?}*/ {
 
         private static final String PIERCED = "pierced";
 
         public CrossbowScopingItemTagGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
-            super(output, /*? >1.21.1 {*/ Registries.ITEM, /*?}*/ completableFuture);
+            super(output, /*? >1.21.1 {*/ /*Registries.ITEM, *//*?}*/ completableFuture);
         }
 
         @Override
         protected void addTags(HolderLookup.Provider wrapperLookup) {
-            /*? <=1.21.1 {*/ /*getOrCreateTagBuilder *//*?} else {*/ getOrCreateRawBuilder /*?}*/(CrossbowScopingTags.INCOMPATIBLE_ITEMS)
-                    ./*? <=1.21.1 {*/ /*addOptional *//*?} else {*/ addOptionalElement /*?}*/(ResourceLocation.fromNamespaceAndPath(PIERCED, "long_crossbow"));
+            /*? <=1.21.1 {*/ getOrCreateTagBuilder /*?} else {*/ /*getOrCreateRawBuilder *//*?}*/(CrossbowScopingTags.INCOMPATIBLE_ITEMS)
+                    ./*? <=1.21.1 {*/ addOptional /*?} else {*/ /*addOptionalElement *//*?}*/(ResourceLocation.fromNamespaceAndPath(PIERCED, "long_crossbow"));
         }
     }
 }

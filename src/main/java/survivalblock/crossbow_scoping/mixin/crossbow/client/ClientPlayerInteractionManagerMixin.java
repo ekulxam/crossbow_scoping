@@ -1,5 +1,5 @@
 //? if >1.21.1 {
-package survivalblock.crossbow_scoping.mixin.crossbow.client;
+/*package survivalblock.crossbow_scoping.mixin.crossbow.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -23,4 +23,4 @@ public class ClientPlayerInteractionManagerMixin {
         return stack;
     }
 }
-//?}
+*///?}
