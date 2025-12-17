@@ -1,9 +1,9 @@
 package survivalblock.crossbow_scoping.mixin.crossbow;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CrossbowItem;
@@ -12,10 +12,10 @@ import net.minecraft.world.item.SpyglassItem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import survivalblock.crossbow_scoping.common.CrossbowScoping;
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes;
+
+import java.util.Map;
 
 @Mixin(value = LivingEntity.class, priority = 10000)
 public abstract class LivingEntityMixin {
@@ -48,5 +48,15 @@ public abstract class LivingEntityMixin {
     @WrapMethod(method = "swapHandItems")
     protected void swapCorrectly(Operation<Void> original) {
         original.call();
+    }
+
+    @WrapMethod(method = "handleEquipmentChanges")
+    protected void syncCrossbowOnEquipmentChange(Map<EquipmentSlot, ItemStack> equipments, Operation<Void> original) {
+        original.call(equipments);
+    }
+
+    @WrapOperation(method = "updatingUsingItem()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isSameItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"))
+    protected boolean useSpyglassAsOtherClientPlayer(ItemStack stack, ItemStack other, Operation<Boolean> original) {
+        return original.call(stack, other);
     }
 }

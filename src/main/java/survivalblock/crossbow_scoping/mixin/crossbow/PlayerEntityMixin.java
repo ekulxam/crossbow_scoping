@@ -14,6 +14,8 @@ import survivalblock.crossbow_scoping.common.CrossbowScoping;
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes;
 import survivalblock.crossbow_scoping.common.injected_interface.CrossbowAttackingPlayer;
 
+import java.util.Map;
+
 @Mixin(value = Player.class, priority = 10000)
 public abstract class PlayerEntityMixin extends LivingEntityMixin implements CrossbowAttackingPlayer {
 
@@ -87,7 +89,14 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Cro
     @Override
     protected void swapCorrectly(Operation<Void> original) {
         this.crossbow_scoping$setAttacking(true);
-        original.call();
+        super.swapCorrectly(original);
+        this.crossbow_scoping$setAttacking(false);
+    }
+
+    @Override
+    protected void syncCrossbowOnEquipmentChange(Map<EquipmentSlot, ItemStack> equipments, Operation<Void> original) {
+        this.crossbow_scoping$setAttacking(true);
+        super.syncCrossbowOnEquipmentChange(equipments, original);
         this.crossbow_scoping$setAttacking(false);
     }
 }
