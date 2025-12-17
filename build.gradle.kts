@@ -91,7 +91,12 @@ stonecutter {
 fletchingTable {
     mixins.create("main") {
         // Default matches the default value in the annotation
-        mixin("default", "${project.property("archives_base_name")}.mixins.json")
+        mixin("default", "${project.property("archives_base_name")}.mixins.json") {
+            env("CLIENT",
+                "survivalblock.crossbow_scoping.mixin.compat.sodium.client",
+                "survivalblock.crossbow_scoping.mixin.crossbow.client"
+            )
+        }
     }
     mixins.all {
         automatic = true
