@@ -52,7 +52,7 @@ dependencies {
         modCompileOnly(dependencyNotation) {
             exclude("net.fabricmc.fabric-api")
         }
-        modRuntimeOnly(dependencyNotation) {
+        modLocalRuntime(dependencyNotation) {
             exclude("net.fabricmc.fabric-api")
         }
     }
@@ -65,6 +65,7 @@ dependencies {
             parchment("org.parchmentmc.data:parchment-${stonecutter.current.project}:${property("deps.parchment")}@zip")
         }
     })
+
     modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
 
 	// Fabric API. This is technically optional, but you probably want it anyway.

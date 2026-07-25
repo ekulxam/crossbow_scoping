@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import survivalblock.crossbow_scoping.client.ScopeRenderer;
 
-@SuppressWarnings("UnusedMixin")
+@SuppressWarnings({"UnusedMixin", "unused"})
 @Mixin(value = ItemRenderer.class, priority = 3000)
 public abstract class ItemRendererMixinMixin {
 
