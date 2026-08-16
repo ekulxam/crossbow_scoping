@@ -1,9 +1,8 @@
 import java.io.BufferedReader
 import java.io.FileReader
-import org.gradle.jvm.tasks.Jar
 
 plugins {
-    id("net.fabricmc.fabric-loom-remap")
+    id("dev.kikugie.loom-back-compat")
     id("maven-publish")
     id("com.modrinth.minotaur")
     kotlin("jvm")
@@ -59,12 +58,14 @@ dependencies {
 
 	// To change the versions see the gradle.properties file
     minecraft("com.mojang:minecraft:${stonecutter.current.project}")
-    mappings (loom.layered {
-        officialMojangMappings()
-        if (hasProperty("deps.parchment")) {
-            parchment("org.parchmentmc.data:parchment-${stonecutter.current.project}:${property("deps.parchment")}@zip")
-        }
-    })
+    if (stonecutter.eval(stonecutter.current.version, "<26")) {
+        mappings (loom.layered {
+            officialMojangMappings()
+            if (hasProperty("deps.parchment")) {
+                parchment("org.parchmentmc.data:parchment-${stonecutter.current.project}:${property("deps.parchment")}@zip")
+            }
+        })
+    }
 
     modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
 
@@ -89,6 +90,22 @@ stonecutter {
     replacements.string {
         direction = eval(current.version, ">1.21.10")
         replace("ResourceLocation", "Identifier")
+    }
+    replacements.string {
+        direction = eval(current.version, ">=26")
+        replace("classTweaker v2 named", "classTweaker v2 official")
+    }
+    replacements.string {
+        direction = eval(current.version, ">=26")
+        replace("FabricDataOutput", "FabricPackOutput")
+    }
+    replacements.string {
+        direction = eval(current.version, ">=26")
+        replace("GuiGraphics", "GuiGraphicsExtractor")
+    }
+    replacements.string {
+        direction = eval(current.version, ">=26")
+        replace("net.minecraft.client.renderer.block.model.ItemTransform", "net.minecraft.client.resources.model.cuboid.ItemTransform")
     }
 }
 
@@ -159,13 +176,21 @@ loom {
     fabricModJsonPath = rootProject.file("src/main/resources/fabric.mod.json")
     accessWidenerPath = stonecutter.process(rootProject.file("src/main/resources/crossbow_scoping.classtweaker"), "build/processed.classtweaker")
 
+    @Suppress("UnstableApiUsage")
     mixin {
-        useLegacyMixinAp = true
+        useLegacyMixinAp = stonecutter.eval(stonecutter.current.version, "<26") // I forgot why this is here
     }
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    options.release.set(21)
+    val java = if (stonecutter.eval(stonecutter.current.version, ">=26")) {
+        25
+    } else if (stonecutter.eval(stonecutter.current.version, ">=1.20.5")) {
+        21
+    } else {
+        17
+    }
+    options.release.set(java)
 }
 
 java {
@@ -174,8 +199,13 @@ java {
     // If you remove this line, sources will not be generated.
     withSourcesJar()
 
-    val java = if (stonecutter.eval(stonecutter.current.version, ">=1.20.5"))
-        JavaVersion.VERSION_21 else JavaVersion.VERSION_17
+    val java = if (stonecutter.eval(stonecutter.current.version, ">=26")) {
+        JavaVersion.VERSION_25
+    } else if (stonecutter.eval(stonecutter.current.version, ">=1.20.5")) {
+        JavaVersion.VERSION_21
+    } else {
+        JavaVersion.VERSION_17
+    }
 
     targetCompatibility = java
     sourceCompatibility = java
@@ -193,7 +223,8 @@ modrinth {
     token = providers.environmentVariable("MODRINTH_TOKEN")
     projectId = project.base.archivesName
     version = project.version
-    uploadFile.set(tasks.named<Jar>("remapJar").get().archiveFile)
+    uploadFile.set(loomx.modJar.flatMap { it.archiveFile })
+    //additionalFiles.add(loomx.modSourcesJar.flatMap { it.archiveFile })
     gameVersions.addAll("${project.property("deps.compatibleVersions")}".split(", ").toList())
     loaders.addAll("${project.property("deps.compatibleLoaders")}".split(", ").toList())
     changelog = rootProject.file("changelog.md").readText()

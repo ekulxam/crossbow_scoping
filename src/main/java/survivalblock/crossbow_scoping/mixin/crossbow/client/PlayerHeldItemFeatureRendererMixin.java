@@ -11,7 +11,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HeadedModel;
+//? if <=1.21.1
 import net.minecraft.client.renderer.ItemInHandRenderer;
+//? if <=1.21.8
 import net.minecraft.client.renderer.MultiBufferSource;
 //? if >1.21.8
 //import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -25,17 +27,21 @@ import net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer;
 //? if >1.21.1
 //import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.world.entity.HumanoidArm;
+//? if <=1.21.1 {
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+//?}
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+//? if <=1.21.1
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import survivalblock.crossbow_scoping.client.ScopeRenderer;
+//? if <=1.21.1
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes;
 
 @Mixin(PlayerItemInHandLayer.class)
@@ -46,7 +52,7 @@ public abstract class PlayerHeldItemFeatureRendererMixin<T extends //? if =1.21.
  *///?} else if >=1.21.10 {
         /*AvatarRenderState
  *///?}
-        , M extends EntityModel<T> & ArmedModel & HeadedModel>
+        , M extends EntityModel<T> & ArmedModel/*? >1.21.8 {*/ /*<T> *//*?}*/ & HeadedModel>
         extends ItemInHandLayer<T, M> {
     //? if >1.21.1 {
     /*@Unique

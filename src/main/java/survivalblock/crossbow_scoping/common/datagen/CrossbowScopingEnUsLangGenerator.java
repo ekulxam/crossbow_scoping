@@ -16,6 +16,7 @@ public class CrossbowScopingEnUsLangGenerator extends FabricLanguageProvider {
     @Override
     public void generateTranslations(HolderLookup.Provider wrapperLookup, TranslationBuilder translationBuilder) {
         translationBuilder.add("item.crossbow_scoping.crossbow.scope", "Scope - %s");
+        translationBuilder.add("item.crossbow_scoping.crossbow.unknown_scope", "???");
 
         translationBuilder.add(CrossbowScopingGameRules.HIGHER_PRECISION.getDescriptionId(), "Crossbow Scoping - Higher Precision");
         translationBuilder.add(CrossbowScopingGameRules.HIGHER_VELOCITY.getDescriptionId(), "Crossbow Scoping - Higher Velocity");

@@ -18,6 +18,7 @@ import net.minecraft.world.item.SpyglassItem;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spongepowered.asm.mixin.MixinEnvironment;
 import survivalblock.crossbow_scoping.client.networking.ScopedCrossbowC2SPayload;
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes;
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingGameRules;
@@ -35,8 +36,11 @@ public class CrossbowScoping implements ModInitializer {
 		CrossbowScopingDataComponentTypes.init();
 		CrossbowScopingGameRules.init();
 
+        //~ if >=26 'playC2S()' -> 'serverboundPlay()'
 		PayloadTypeRegistry.playC2S().register(ScopedCrossbowC2SPayload.ID, ScopedCrossbowC2SPayload.PACKET_CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(ScopedCrossbowC2SPayload.ID, ScopedCrossbowC2SPayload.Receiver.INSTANCE);
+
+        //MixinEnvironment.getCurrentEnvironment().audit();
 	}
 
 	public static ResourceLocation id(String path) {
@@ -95,6 +99,11 @@ public class CrossbowScoping implements ModInitializer {
         return !potentialSpyglass.isEmpty() && potentialSpyglass.getItem() instanceof SpyglassItem;
     }
 
+    /*
+    begin credit
+    Licensed under the MIT license from Amarong
+    See PlayerInventoryMixin for more information, and for the full license
+     */
     public static Object setScopeStack(NonNullList<?> instance, int index, Object element, Player player, Operation<Object> original) {
         if (!(element instanceof ItemStack stack)) {
             return original.call(instance, index, element);
@@ -116,4 +125,5 @@ public class CrossbowScoping implements ModInitializer {
         }
         return original;
     }
+    // end credit
 }

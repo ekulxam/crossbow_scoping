@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.Options;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
@@ -26,14 +27,19 @@ public class MinecraftClientMixin {
 
     @Shadow @Final public Options options;
 
+    //? if <26.2
     @Shadow @Nullable public Screen screen;
 
     @Shadow @Final public MouseHandler mouseHandler;
 
     @Shadow @Nullable public LocalPlayer player;
 
+    //? if >=26.2
+    //@Shadow @Final public Gui gui;
+
     @WrapOperation(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;continueAttack(Z)V"))
     private void onScopedCrossbowAttack(Minecraft instance, boolean breaking, Operation<Void> original) {
+        //~ if >=26.2 'this.screen' -> 'this.gui.screen()'
         if (!this.options.keyAttack.isDown() || this.screen != null || !this.mouseHandler.isMouseGrabbed()) {
             original.call(instance, breaking);
             return;

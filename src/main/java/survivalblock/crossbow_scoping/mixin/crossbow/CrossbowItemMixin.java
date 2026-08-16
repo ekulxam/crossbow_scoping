@@ -38,6 +38,7 @@ import java.util.function.Consumer;
 import static survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes.CROSSBOW_SCOPE;
 import static survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes.LOADING_PHASE;
 
+@SuppressWarnings("NameDoesntMatchTargetClass")
 @Mixin(value = CrossbowItem.class, priority = 1500)
 public class CrossbowItemMixin extends ItemMixin {
 
@@ -134,15 +135,28 @@ public class CrossbowItemMixin extends ItemMixin {
 
     //? if <=1.21.1 {
     @Inject(method = "appendHoverText", at = @At("HEAD"))
-    private void appendScopeInTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag type, CallbackInfo ci) {
+    private void appendScopeInTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag, CallbackInfo ci) {
     //?} else {
-    /*@Override
+    /*@SuppressWarnings("ConstantValue")
+    @Override
     protected void appendScopeInTooltip(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag, CallbackInfo ci) {
     *///?}
         ItemStack stackInComponents = stack.getOrDefault(CROSSBOW_SCOPE, ItemStack.EMPTY);
         if (!stackInComponents.isEmpty()) {
-            Component text = stackInComponents.getHoverName();
-            /*? <=1.21.1 {*/ tooltip.add /*?} else {*/ /*tooltipAdder.accept *//*?}*/(Component.translatable("item.crossbow_scoping.crossbow.scope", text).setStyle(text.getStyle()));
+            Component text;
+            List<Component> scopeTooltip = stackInComponents.getTooltipLines(context, null, flag);
+            if (!scopeTooltip.isEmpty() /*? >=1.21.4 {*/ /*&& !Objects.equals(scopeTooltip, ItemStackAccessor.crossbow_scoping$getOpNbtWarning()) *//*?}*/) {
+                text = scopeTooltip.getFirst();
+                //? if >1.21.1 {
+                /*if (!Objects.equals(text.getString(), stackInComponents.getStyledHoverName().getString())) {
+                    text = Component.translatable("item.crossbow_scoping.crossbow.unknown_scope");
+                }
+                *///?}
+            } else {
+                text = Component.translatable("item.crossbow_scoping.crossbow.unknown_scope");
+            }
+            //~ if >1.21.1 'tooltip.add' -> 'tooltipAdder.accept'
+            tooltip.add(Component.translatableEscape("item.crossbow_scoping.crossbow.scope", text));
         }
     }
 }

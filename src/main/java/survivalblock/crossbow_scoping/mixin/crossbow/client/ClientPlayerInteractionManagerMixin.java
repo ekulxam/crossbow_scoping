@@ -15,7 +15,13 @@ import org.spongepowered.asm.mixin.injection.At;
 public class ClientPlayerInteractionManagerMixin {
 
     // lambda useItem
-    @WrapOperation(method = {"method_41929", "method_62152"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;"))
+    @WrapOperation(method = {
+            //? if <26 {
+            "method_41929", "method_62152"
+            //?} else {
+            /^"lambda$useItem$0", "lambda$useItem$1"
+            ^///?}
+    }, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;"))
     private static ItemStack offhandWoes(Player instance, InteractionHand interactionHand, Operation<ItemStack> original) {
         instance.crossbow_scoping$setAttacking(true);
         ItemStack stack = original.call(instance, interactionHand);

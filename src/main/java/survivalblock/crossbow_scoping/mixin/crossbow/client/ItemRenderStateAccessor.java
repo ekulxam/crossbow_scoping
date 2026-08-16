@@ -13,6 +13,7 @@ public interface ItemRenderStateAccessor {
     @Mixin(ItemStackRenderState.LayerRenderState.class)
     interface LayerRenderStateAccessor {
 
+        //~ if >=26 'transform' -> 'itemTransform'
         @Accessor("transform")
         ItemTransform crossbow_posing$getTransform();
     }

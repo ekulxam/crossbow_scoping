@@ -8,9 +8,11 @@ import net.fabricmc.api.Environment;
 //import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+//? if <=1.21.8
 import net.minecraft.client.renderer.MultiBufferSource;
 //? if >1.21.8
 //import net.minecraft.client.renderer.SubmitNodeCollector;
+//? if <=1.21.8
 import net.minecraft.client.renderer.entity.ItemRenderer;
 //? if >1.21.1
 //import net.minecraft.client.renderer.item.ItemStackRenderState;
@@ -40,7 +42,10 @@ public final class ScopeRenderer {
     private ScopeRenderer() {
     }
 
-    public static void renderScopeOnCrossbow(ItemStack /*? <=1.21.1 {*/ stack /*?} else {*/ /*scope *//*?}*/, PoseStack matrices, /*? <=1.21.8 {*/ MultiBufferSource vertexConsumers /*?} else {*/ /*SubmitNodeCollector renderQueue *//*?}*/, int light, int overlay, ItemRenderer itemRenderer /*? >1.21.8 {*//*, int outlineColor *//*?}*/) {
+    //~ if >1.21.8 'MultiBufferSource vertexConsumers' -> 'SubmitNodeCollector renderQueue' {
+    //~ if >1.21.8 'vertexConsumers' -> 'renderQueue' {
+    //~ if >1.21.8 'ItemRenderer itemRenderer' -> 'int outlineColor' {
+    public static void renderScopeOnCrossbow(ItemStack /*? <=1.21.1 {*/ stack /*?} else {*/ /*scope *//*?}*/, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay, ItemRenderer itemRenderer) {
         //? if <=1.21.1 {
         if (!(CrossbowScoping.isValidCrossbow(stack))) {
             return;
@@ -61,14 +66,18 @@ public final class ScopeRenderer {
         /*matrices.translate(0, 0.1, 0.1);
         //? if >1.21.8
         //final ItemStackRenderState SCOPE_RENDER_STATE = new ItemStackRenderState();
-        /^? <=1.21.8 && >1.21.1 {^/ /^((ItemRendererAccessor) itemRenderer).crossbow_scoping$getItemModelManager() ^//^?} else {^/ Minecraft.getInstance().getItemModelResolver() /^?}^/
-                .updateForTopItem(SCOPE_RENDER_STATE, scope, displayContext, world, null, 0);
+        //~ if <=1.21.8 && >1.21.1 'Minecraft.getInstance().getItemModelResolver()' -> '((ItemRendererAccessor) itemRenderer).crossbow_scoping$getItemModelManager()'
+        Minecraft.getInstance().getItemModelResolver().updateForTopItem(SCOPE_RENDER_STATE, scope, displayContext, world, null, 0);
         SCOPE_RENDER_STATE.setAnimated();
         SCOPE_RENDER_STATE.appendModelIdentityElement("crossbow_scoping:scope");
-        SCOPE_RENDER_STATE./^? <=1.21.8 {^/ render /^?} else {^/ /^submit ^//^?}^/(matrices, /^? <=1.21.8 {^/ vertexConsumers /^?} else {^/ /^renderQueue ^//^?}^/, light, overlay /^? >1.21.8 {^//^, outlineColor ^//^?}^/);
+        //~ if >1.21.8 'render' -> 'submit'
+        SCOPE_RENDER_STATE.render(matrices, /^? <=1.21.8 {^/ vertexConsumers /^?} else {^/ /^vertexConsumers ^//^?}^/, light, overlay /^? >1.21.8 {^//^, outlineColor ^//^?}^/);
         //? if <1.21.9
         SCOPE_RENDER_STATE.clear();
         *///?}
         matrices.popPose();
     }
+    //~}
+    //~}
+    //~}
 }

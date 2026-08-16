@@ -63,6 +63,7 @@ public class RangedWeaponItemMixin {
             if (CrossbowScopingGameRules.getBoolean(gameRules, CrossbowScopingGameRules.HIGHER_VELOCITY)) {
                 projectile.setDeltaMovement(projectile.getDeltaMovement().scale(CrossbowScopingGameRules.getDouble(gameRules, CrossbowScopingGameRules.VELOCITY_MULTIPLIER)));
             }
+            //~ if >=26 'getType().is(' -> 'is('
             if (CrossbowScopingGameRules.getBoolean(gameRules, CrossbowScopingGameRules.NO_GRAVITY_PROJECTILES) && projectile.getType().is(CrossbowScopingTags.ALLOW_NO_GRAVITY)) {
                 projectile.setNoGravity(true);
             }

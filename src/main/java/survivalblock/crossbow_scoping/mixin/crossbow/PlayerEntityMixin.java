@@ -101,9 +101,9 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Cro
     }
 
     @Override
-    protected Map<EquipmentSlot, ItemStack> forgetScopePseudochange(Operation<Map<EquipmentSlot, ItemStack>> original) {
+    protected Map<EquipmentSlot, ItemStack> forgetScopePseudochange(/*? >=26.2 {*/ /*Map<EquipmentSlot, ItemStack> lastEquipmentItems, *//*?}*/Operation<Map<EquipmentSlot, ItemStack>> original) {
         this.crossbow_scoping$setAttacking(true);
-        Map<EquipmentSlot, ItemStack> result = super.forgetScopePseudochange(original);
+        Map<EquipmentSlot, ItemStack> result = super.forgetScopePseudochange(/*? >=26.2 {*/ /*lastEquipmentItems, *//*?}*/ original);
         this.crossbow_scoping$setAttacking(false);
         return result;
     }

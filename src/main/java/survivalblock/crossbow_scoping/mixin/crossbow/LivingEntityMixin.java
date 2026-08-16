@@ -53,8 +53,8 @@ public abstract class LivingEntityMixin {
     }
 
     @WrapMethod(method = "collectEquipmentChanges")
-    protected Map<EquipmentSlot, ItemStack> forgetScopePseudochange(Operation<Map<EquipmentSlot, ItemStack>> original) {
-        return original.call();
+    protected Map<EquipmentSlot, ItemStack> forgetScopePseudochange(/*? >=26.2 {*/ /*Map<EquipmentSlot, ItemStack> lastEquipmentItems, *//*?}*/ Operation<Map<EquipmentSlot, ItemStack>> original) {
+        return original.call(/*? >=26.2 {*/ /*lastEquipmentItems *//*?}*/);
     }
 
     @WrapMethod(method = "handleEquipmentChanges")
