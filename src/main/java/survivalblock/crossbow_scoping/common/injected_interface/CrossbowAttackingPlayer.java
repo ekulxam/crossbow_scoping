@@ -3,7 +3,6 @@ package survivalblock.crossbow_scoping.common.injected_interface;
 import net.minecraft.world.item.ItemStack;
 
 public interface CrossbowAttackingPlayer {
-
     default void crossbow_scoping$setAttacking(boolean attacking) {
     }
 
