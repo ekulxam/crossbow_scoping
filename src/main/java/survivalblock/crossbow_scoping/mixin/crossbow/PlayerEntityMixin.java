@@ -68,10 +68,12 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Cro
         return ItemStack.matches(active, scope);
     }
 
+    //? if <=1.21.4 {
     @WrapOperation(method = "setItemSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/NonNullList;set(ILjava/lang/Object;)Ljava/lang/Object;"))
     private Object setScopeStack(NonNullList<?> instance, int i, Object object, Operation<Object> original) {
         return CrossbowScoping.setScopeStack(instance, i, object, (Player) (Object) this, original);
     }
+    //?}
 
     /*
             begin credit

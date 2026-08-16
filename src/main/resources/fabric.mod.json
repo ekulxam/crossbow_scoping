@@ -26,15 +26,11 @@
 	"mixins": [
 		"crossbow_scoping.mixins.json"
 	],
+    "accessWidener": "crossbow_scoping.classtweaker",
 	"depends": {
-		"fabricloader": ">=0.16.10",
+		"fabricloader": ">=0.19.3",
 		"minecraft": "~1.21.1",
 		"java": ">=21",
 		"fabric-api": "*"
-	},
-	"custom": {
-		"loom:injected_interfaces": {
-			"net/minecraft/class_1657": ["survivalblock/crossbow_scoping/common/injected_interface/CrossbowAttackingPlayer"]
-		}
 	}
 }

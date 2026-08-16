@@ -3,12 +3,12 @@ import java.io.FileReader
 import org.gradle.jvm.tasks.Jar
 
 plugins {
-    id("fabric-loom") version "1.15-SNAPSHOT"
+    id("net.fabricmc.fabric-loom-remap")
     id("maven-publish")
-    id("com.modrinth.minotaur") version "2.+"
-    kotlin("jvm") version "2.2.10"
-    id("com.google.devtools.ksp") version "2.2.10-2.0.2"
-    id("dev.kikugie.fletching-table.fabric") version "0.1.0-alpha.22"
+    id("com.modrinth.minotaur")
+    kotlin("jvm")
+    id("com.google.devtools.ksp")
+    id("dev.kikugie.fletching-table.fabric")
 }
 
 version = "${project.property("mod_version")}+${stonecutter.current.project}"
@@ -157,6 +157,7 @@ loom {
     }
 
     fabricModJsonPath = rootProject.file("src/main/resources/fabric.mod.json")
+    accessWidenerPath = stonecutter.process(rootProject.file("src/main/resources/crossbow_scoping.classtweaker"), "build/processed.classtweaker")
 
     mixin {
         useLegacyMixinAp = true

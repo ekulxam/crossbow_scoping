@@ -5,7 +5,6 @@ import net.minecraft.world.item.ItemStack;
 public interface CrossbowAttackingPlayer {
 
     default void crossbow_scoping$setAttacking(boolean attacking) {
-
     }
 
     default boolean crossbow_scoping$isAttacking() {
@@ -13,7 +12,6 @@ public interface CrossbowAttackingPlayer {
     }
 
     default void crossbow_scoping$setStartingToScope(ItemStack scope) {
-
     }
 
     default boolean crossbow_scoping$usingScope(ItemStack crossbow) {
