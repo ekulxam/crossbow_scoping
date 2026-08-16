@@ -146,7 +146,7 @@ tasks.named("build") {
 
 tasks.register("autoVersionChangelog") {
     doLast {
-        val changelog = File("changelog.md")
+        val changelog = rootProject.file("changelog.md")
         val reader = BufferedReader(FileReader(changelog))
         val lines = reader.readLines().toMutableList()
         val title = "Crossbow Scoping ${project.property("mod_version")}"
