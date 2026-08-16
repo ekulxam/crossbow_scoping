@@ -1,10 +1,12 @@
 package survivalblock.crossbow_scoping.common;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -91,5 +93,27 @@ public class CrossbowScoping implements ModInitializer {
 
     public static boolean isASpyglass(ItemStack potentialSpyglass) {
         return !potentialSpyglass.isEmpty() && potentialSpyglass.getItem() instanceof SpyglassItem;
+    }
+
+    public static Object setScopeStack(NonNullList<?> instance, int index, Object element, Player player, Operation<Object> original) {
+        if (!(element instanceof ItemStack stack)) {
+            return original.call(instance, index, element);
+        }
+        Object obj = instance.get(index);
+        if (!(obj instanceof ItemStack crossbow)) {
+            return original.call(instance, index, element);
+        }
+        if (!CrossbowScoping.isLoaded(crossbow, true)) {
+            return original.call(instance, index, element);
+        }
+        if (!player.crossbow_scoping$usingScope(crossbow)) {
+            return original.call(instance, index, element);
+        }
+        if (stack.isEmpty()) {
+            return crossbow.remove(CrossbowScopingDataComponentTypes.CROSSBOW_SCOPE);
+        } else if (stack.getItem() instanceof SpyglassItem) {
+            return crossbow.set(CrossbowScopingDataComponentTypes.CROSSBOW_SCOPE, stack);
+        }
+        return original;
     }
 }

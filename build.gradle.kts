@@ -71,8 +71,11 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("deps.fabric_api")}")
 
-	modRuntimeOnly("com.terraformersmc:modmenu:${project.property("deps.modmenu")}")
-	modRuntimeOnly("maven.modrinth:sodium:${project.property("deps.sodium")}")
+	modLocalRuntime("com.terraformersmc:modmenu:${project.property("deps.modmenu")}")
+    modLocalRuntime("maven.modrinth:sodium:${project.property("deps.sodium")}")
+    if (hasProperty("deps.carpet")) {
+        modLocalRuntime("maven.modrinth:carpet:${project.property("deps.carpet")}")
+    }
 
     mixinsquared("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${project.property("mixin_squared_version")}")
 

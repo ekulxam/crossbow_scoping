@@ -50,6 +50,11 @@ public abstract class LivingEntityMixin {
         original.call();
     }
 
+    @WrapMethod(method = "collectEquipmentChanges")
+    protected Map<EquipmentSlot, ItemStack> forgetScopePseudochange(Operation<Map<EquipmentSlot, ItemStack>> original) {
+        return original.call();
+    }
+
     @WrapMethod(method = "handleEquipmentChanges")
     protected void syncCrossbowOnEquipmentChange(Map<EquipmentSlot, ItemStack> equipments, Operation<Void> original) {
         original.call(equipments);

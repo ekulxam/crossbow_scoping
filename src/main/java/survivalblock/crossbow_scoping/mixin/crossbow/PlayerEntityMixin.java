@@ -2,14 +2,14 @@ package survivalblock.crossbow_scoping.mixin.crossbow;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SpyglassItem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import survivalblock.crossbow_scoping.common.CrossbowScoping;
 import survivalblock.crossbow_scoping.common.init.CrossbowScopingDataComponentTypes;
 import survivalblock.crossbow_scoping.common.injected_interface.CrossbowAttackingPlayer;
@@ -68,6 +68,11 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Cro
         return ItemStack.matches(active, scope);
     }
 
+    @WrapOperation(method = "setItemSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/NonNullList;set(ILjava/lang/Object;)Ljava/lang/Object;"))
+    private Object setScopeStack(NonNullList<?> instance, int i, Object object, Operation<Object> original) {
+        return CrossbowScoping.setScopeStack(instance, i, object, (Player) (Object) this, original);
+    }
+
     /*
             begin credit
             Adapted from https://github.com/ekulxam/amarong/blob/f8264bdf61751705497ecca122e5d655c067eba4/src/main/java/survivalblock/amarong/mixin/staff/PlayerEntityMixin.java#L13
@@ -91,6 +96,14 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Cro
         this.crossbow_scoping$setAttacking(true);
         super.swapCorrectly(original);
         this.crossbow_scoping$setAttacking(false);
+    }
+
+    @Override
+    protected Map<EquipmentSlot, ItemStack> forgetScopePseudochange(Operation<Map<EquipmentSlot, ItemStack>> original) {
+        this.crossbow_scoping$setAttacking(true);
+        Map<EquipmentSlot, ItemStack> result = super.forgetScopePseudochange(original);
+        this.crossbow_scoping$setAttacking(false);
+        return result;
     }
 
     @Override
