@@ -14,7 +14,6 @@
     "crossbow.ServerPlayNetworkHandlerMixin"
   ],
   "client": [
-    "crossbow.client.HeldItemFeatureRendererMixin",
     "crossbow.client.InGameHudMixin",
     "crossbow.client.MinecraftClientMixin",
     "crossbow.client.OtherClientPlayerEntityMixin",
