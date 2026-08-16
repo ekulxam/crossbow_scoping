@@ -40,6 +40,8 @@ fabricApi {
 	}
 }
 
+val deobf = loomx.isUnobfuscated
+
 dependencies {
     fun mixinsquared(dependencyNotation : String) {
         include(dependencyNotation)
@@ -58,7 +60,7 @@ dependencies {
 
 	// To change the versions see the gradle.properties file
     minecraft("com.mojang:minecraft:${stonecutter.current.project}")
-    if (stonecutter.eval(stonecutter.current.version, "<26")) {
+    if (!deobf) {
         mappings (loom.layered {
             officialMojangMappings()
             if (hasProperty("deps.parchment")) {
@@ -224,7 +226,7 @@ modrinth {
     projectId = project.base.archivesName
     version = project.version
     uploadFile.set(loomx.modJar.flatMap { it.archiveFile })
-    //additionalFiles.add(loomx.modSourcesJar.flatMap { it.archiveFile })
+    additionalFiles.add(loomx.modSourcesJar.flatMap { it.archiveFile })
     gameVersions.addAll("${project.property("deps.compatibleVersions")}".split(", ").toList())
     loaders.addAll("${project.property("deps.compatibleLoaders")}".split(", ").toList())
     changelog = rootProject.file("changelog.md").readText()
