@@ -10,7 +10,7 @@ Instead, to shoot the projectile(s), you now have to press your attack key/butto
 This mod (should have) out-of-the-box compatibility with mods that add custom spyglasses and custom crossbow projectiles. Feel free to open an issue on GitHub if you find an exception!
 
 ## Gamerules
-1. crossbow_scoping:higherPrecision - significantly increases scoped crossbow precision
-2. crossbow_scoping:higherVelocity - toggles velocity change of projectiles fired by scoped crossbow
-3. crossbow_scoping:velocityMultiplier - controls the velocity multiplier for projectiles fired by scoped crossbows
-4. crossbow_scoping:noGravityProjectiles - entities in the `crossbow_scoping:allow_no_gravity` tag will have no gravity when fired from a scoped crossbow. By default, the tag contains arrows, spectral arrows, and firework rockets.
+1. crossbow_scoping:higher_precision - significantly increases scoped crossbow precision
+2. crossbow_scoping:higher_velocity - toggles velocity change of projectiles fired by scoped crossbow
+3. crossbow_scoping:velocity_multiplier - controls the velocity multiplier for projectiles fired by scoped crossbows
+4. crossbow_scoping:no_gravity_projectiles - entities in the `crossbow_scoping:allow_no_gravity` tag will have no gravity when fired from a scoped crossbow. By default, the tag contains arrows, spectral arrows, and firework rockets.

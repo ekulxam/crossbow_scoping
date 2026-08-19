@@ -80,6 +80,8 @@ dependencies {
         modLocalRuntime("maven.modrinth:carpet:${project.property("deps.carpet")}")
     }
 
+    include(modImplementation("maven.modrinth:registrar:${project.property("deps.registrar")}")!!)
+
     mixinsquared("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${project.property("mixin_squared_version")}")
 
     if (stonecutter.eval(stonecutter.current.version, "=1.21.1")) {
@@ -231,4 +233,7 @@ modrinth {
     loaders.addAll("${project.property("deps.compatibleLoaders")}".split(", ").toList())
     changelog = rootProject.file("changelog.md").readText()
     syncBodyFrom = "<!--DO NOT EDIT MANUALLY: synced from gh readme-->\n" + rootProject.file("README.md").readText()
+    dependencies {
+        embedded.version("registrar", "${project.property("deps.registrar")}")
+    }
 }

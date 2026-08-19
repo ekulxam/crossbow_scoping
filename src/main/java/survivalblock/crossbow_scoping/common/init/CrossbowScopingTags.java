@@ -7,6 +7,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
 import survivalblock.crossbow_scoping.common.CrossbowScoping;
 
+// interned so we don't need to init
 public class CrossbowScopingTags {
 
     public static final TagKey<EntityType<?>> ALLOW_NO_GRAVITY = TagKey.create(Registries.ENTITY_TYPE, CrossbowScoping.id("allow_no_gravity"));
