@@ -21,8 +21,7 @@ public class CrossbowScopingGameRules {
     //~ if >=1.21.11 'DoubleRule>' -> 'Double>' {
     public static final GameRules.Key<GameRules.BooleanValue> HIGHER_PRECISION = REGISTRANT.registerBoolean("higher_precision", true);
     public static final GameRules.Key<GameRules.BooleanValue> HIGHER_VELOCITY = REGISTRANT.registerBoolean("higher_velocity", true);
-    //~ if >=1.21.11 'GameRuleFactory.createDoubleRule(2.5, ' -> 'GameRuleBuilder.forDouble(2.5).range('
-    public static final GameRules.Key<DoubleRule> VELOCITY_MULTIPLIER = REGISTRANT.register("velocity_multiplier", GameRuleFactory.createDoubleRule(2.5, 1.0, 45.0));
+    public static final GameRules.Key<DoubleRule> VELOCITY_MULTIPLIER = REGISTRANT.registerDouble("velocity_multiplier", 2.5, 1.0, 45.0);
     public static final GameRules.Key<GameRules.BooleanValue> NO_GRAVITY_PROJECTILES = REGISTRANT.registerBoolean("no_gravity_projectiles", false);
     //~}
     //~}
